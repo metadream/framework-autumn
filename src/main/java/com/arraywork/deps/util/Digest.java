@@ -20,7 +20,7 @@ public class Digest {
 
     private static final BCryptEncoder bCryptEncoder = new BCryptEncoder();
     private static final char[] ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            .toCharArray();
+        .toCharArray();
 
     // NanoID
     public static String nanoId() {

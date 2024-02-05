@@ -10,7 +10,6 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -35,52 +34,69 @@ public class ErrorHandler {
     @Autowired
     private HttpServletResponse response;
 
+    // Custom exception (respond with custom status)
     @ExceptionHandler(HttpException.class)
     public ErrorResponse handle(HttpException e) {
         return buildErrorResponse(e.getStatus(), e);
     }
 
-    @ExceptionHandler({ HttpMessageNotReadableException.class, HttpMessageNotWritableException.class,
-            MethodArgumentTypeMismatchException.class, IllegalStateException.class, IllegalArgumentException.class })
+    // 400
+    @ExceptionHandler({
+        HttpMessageNotReadableException.class,
+        HttpMessageNotWritableException.class,
+        MethodArgumentTypeMismatchException.class,
+        IllegalStateException.class,
+        IllegalArgumentException.class
+    })
     public ErrorResponse handleBadRequest(Exception e) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, e);
     }
 
+    // 401
     @ExceptionHandler(SecurityException.class)
     public ErrorResponse handle(SecurityException e) {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, e);
     }
 
+    // 404
     @ExceptionHandler(NoResourceFoundException.class)
     public ErrorResponse handle(NoResourceFoundException e) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, e);
     }
 
+    // 405
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ErrorResponse handle(HttpRequestMethodNotSupportedException e) {
         return buildErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, e);
     }
 
-    @ExceptionHandler({ HttpMediaTypeNotSupportedException.class, HttpMediaTypeNotAcceptableException.class })
+    // 415
+    @ExceptionHandler({
+        HttpMediaTypeNotSupportedException.class,
+        HttpMediaTypeNotAcceptableException.class
+    })
     public ErrorResponse handle(HttpMediaTypeNotSupportedException e) {
         return buildErrorResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE, e);
     }
 
+    // Uncaught exceptions
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handle(Exception e) {
         String message = e.getMessage();
         String path = request.getRequestURI();
         logger.error("{}: {}", message, path, e);
-        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error.", path);
+
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        response.setStatus(status.value());
+        return new ErrorResponse(status.value(), status.getReasonPhrase(), path);
     }
 
     private ErrorResponse buildErrorResponse(HttpStatus status, Exception e) {
-        response.setStatus(status.value());
-
         String message = e.getMessage();
         String path = request.getRequestURI();
         logger.error("{}: {}", message, path);
+
+        response.setStatus(status.value());
         return new ErrorResponse(status.value(), message, path);
     }
 

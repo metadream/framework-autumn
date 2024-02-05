@@ -1,4 +1,4 @@
-package com.arraywork.deps;
+package com.arraywork.deps.error;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +16,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 
 /**
@@ -31,34 +32,36 @@ public class ErrorHandler {
 
     @Autowired
     private HttpServletRequest request;
+    @Autowired
+    private HttpServletResponse response;
+
+    @ExceptionHandler(HttpException.class)
+    public ErrorResponse handle(HttpException e) {
+        return buildErrorResponse(e.getStatus(), e);
+    }
 
     @ExceptionHandler({ HttpMessageNotReadableException.class, HttpMessageNotWritableException.class,
             MethodArgumentTypeMismatchException.class, IllegalStateException.class, IllegalArgumentException.class })
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleBadRequest(Exception e) {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, e);
     }
 
     @ExceptionHandler(SecurityException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorResponse handle(SecurityException e) {
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, e);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handle(NoResourceFoundException e) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, e);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ErrorResponse handle(HttpRequestMethodNotSupportedException e) {
         return buildErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, e);
     }
 
     @ExceptionHandler({ HttpMediaTypeNotSupportedException.class, HttpMediaTypeNotAcceptableException.class })
-    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
     public ErrorResponse handle(HttpMediaTypeNotSupportedException e) {
         return buildErrorResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE, e);
     }
@@ -73,6 +76,8 @@ public class ErrorHandler {
     }
 
     private ErrorResponse buildErrorResponse(HttpStatus status, Exception e) {
+        response.setStatus(status.value());
+
         String message = e.getMessage();
         String path = request.getRequestURI();
         logger.error("{}: {}", message, path);

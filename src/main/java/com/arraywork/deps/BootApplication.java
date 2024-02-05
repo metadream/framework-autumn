@@ -9,5 +9,4 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2024/02/05
  */
 @SpringBootApplication(scanBasePackages = "com.arraywork.deps")
-public class WebApplication {
-}
+public class BootApplication {}

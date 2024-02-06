@@ -9,6 +9,7 @@ import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -38,6 +39,13 @@ public class ErrorHandler {
     @ExceptionHandler(HttpException.class)
     public ErrorResponse handle(HttpException e) {
         return buildErrorResponse(e.getStatus(), e);
+    }
+
+    // 400: Validation exception
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ErrorResponse handle(MethodArgumentNotValidException e) {
+        String message = e.getBindingResult().getFieldError().getDefaultMessage();
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, message);
     }
 
     // 400
@@ -91,13 +99,16 @@ public class ErrorHandler {
         return new ErrorResponse(status.value(), status.getReasonPhrase(), path);
     }
 
-    private ErrorResponse buildErrorResponse(HttpStatus status, Exception e) {
-        String message = e.getMessage();
+    private ErrorResponse buildErrorResponse(HttpStatus status, String message) {
         String path = request.getRequestURI();
         logger.error("{}: {}", message, path);
 
         response.setStatus(status.value());
         return new ErrorResponse(status.value(), message, path);
+    }
+
+    private ErrorResponse buildErrorResponse(HttpStatus status, Exception e) {
+        return buildErrorResponse(status, e.getMessage());
     }
 
     @Data

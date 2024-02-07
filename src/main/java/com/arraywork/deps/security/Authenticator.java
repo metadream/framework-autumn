@@ -33,7 +33,7 @@ public class Authenticator implements HandlerInterceptor {
             Protected anno = method.getAnnotation(Protected.class);
 
             if (anno != null) {
-                Object object = session.getAttribute(session.getId());
+                Object object = session.getAttribute(session.getId().toLowerCase());
                 Assert.notNull(object, HttpStatus.UNAUTHORIZED);
             }
         }

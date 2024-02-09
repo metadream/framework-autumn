@@ -14,15 +14,15 @@ import lombok.Data;
 public class ExpirableCache extends ConcurrentHashMap<String, Object> {
 
     private static final long serialVersionUID = 340333465829356167L;
-    private long expires; // milliseconds
 
-    public ExpirableCache(long expires) { // seconds
-        this.expires = expires * 1000;
+    // TTL in seconds
+    public Object put(String key, Object value, long ttl) {
+        long timestamp = System.currentTimeMillis() + ttl * 1000;
+        return super.put(key, new ExpirableObject(value, timestamp));
     }
 
     public Object put(String key, Object value) {
-        long timestamp = System.currentTimeMillis() + expires;
-        return super.put(key, new ExpirableObject(value, timestamp));
+        return super.put(key, new ExpirableObject(value, 0));
     }
 
     public Object get(String key) {
@@ -44,7 +44,7 @@ public class ExpirableCache extends ConcurrentHashMap<String, Object> {
         private long timestamp;
 
         public boolean isExpired() {
-            return timestamp < System.currentTimeMillis();
+            return timestamp > 0 && timestamp < System.currentTimeMillis();
         }
 
     }

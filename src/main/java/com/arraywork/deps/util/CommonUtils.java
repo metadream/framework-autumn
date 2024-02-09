@@ -20,7 +20,8 @@ public class CommonUtils {
     public static <T> List<String> validate(T entity, String property) {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<T>> errors = validator.validateProperty(entity, property);
-        return errors.stream().map(e -> e.getMessage()).collect(Collectors.toList());
+        List<String> messages = errors.stream().map(e -> e.getMessage()).collect(Collectors.toList());
+        return messages.isEmpty() ? null : messages;
     }
 
 }

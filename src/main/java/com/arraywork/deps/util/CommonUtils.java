@@ -17,9 +17,9 @@ import jakarta.validation.Validator;
 public class CommonUtils {
 
     // Manually trigger validation
-    public static <T> List<String> validate(T t, String property) {
+    public static <T> List<String> validate(T entity, String property) {
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<T>> errors = validator.validateProperty(t, property);
+        Set<ConstraintViolation<T>> errors = validator.validateProperty(entity, property);
         return errors.stream().map(e -> e.getMessage()).collect(Collectors.toList());
     }
 

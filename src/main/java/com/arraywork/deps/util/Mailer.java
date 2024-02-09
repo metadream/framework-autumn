@@ -35,7 +35,6 @@ public class Mailer {
         Context context = new Context();
         context.setVariables(model);
         model.put("content", templateEngine.process(template, context));
-        System.out.println(model.get("content"));
         return sendMail(model);
     }
 

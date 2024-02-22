@@ -7,7 +7,7 @@ import org.springframework.util.StringUtils;
 import com.arraywork.dep.error.HttpException;
 
 /**
- * Assertion Extension
+ * Assertion Custom Extension
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/05

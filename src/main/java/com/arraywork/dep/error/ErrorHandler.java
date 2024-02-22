@@ -1,4 +1,4 @@
-package com.arraywork.deps.error;
+package com.arraywork.dep.error;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

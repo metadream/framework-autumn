@@ -1,4 +1,4 @@
-package com.arraywork.deps.lib;
+package com.arraywork.dep.lib;
 
 import java.security.SecureRandom;
 import java.util.regex.Matcher;

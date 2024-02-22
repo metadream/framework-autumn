@@ -1,10 +1,10 @@
-package com.arraywork.deps.util;
+package com.arraywork.dep.util;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
-import com.arraywork.deps.error.HttpException;
+import com.arraywork.dep.error.HttpException;
 
 /**
  * Assertion Extension

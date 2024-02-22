@@ -1,4 +1,4 @@
-package com.arraywork.deps;
+package com.arraywork.dep;
 
 import java.io.IOException;
 import java.util.List;

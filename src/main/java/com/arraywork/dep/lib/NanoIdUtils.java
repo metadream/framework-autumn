@@ -18,7 +18,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.arraywork.deps.lib;
+package com.arraywork.dep.lib;
 
 import java.security.SecureRandom;
 import java.util.Random;

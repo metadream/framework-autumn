@@ -1,4 +1,4 @@
-package com.arraywork.dep.error;
+package com.arraywork.springshot.error;
 
 import org.springframework.http.HttpStatus;
 

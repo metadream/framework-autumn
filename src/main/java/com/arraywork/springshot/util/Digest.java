@@ -1,4 +1,4 @@
-package com.arraywork.dep.util;
+package com.arraywork.springshot.util;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -7,8 +7,8 @@ import java.util.UUID;
 
 import org.springframework.util.DigestUtils;
 
-import com.arraywork.dep.lib.BCryptEncoder;
-import com.arraywork.dep.lib.NanoIdUtils;
+import com.arraywork.springshot.lib.BCryptEncoder;
+import com.arraywork.springshot.lib.NanoIdUtils;
 
 /**
  * Crypto Digest

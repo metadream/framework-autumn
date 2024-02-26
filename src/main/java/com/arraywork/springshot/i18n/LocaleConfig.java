@@ -1,4 +1,4 @@
-package com.arraywork.dep.i18n;
+package com.arraywork.springshot.i18n;
 
 import java.util.Locale;
 

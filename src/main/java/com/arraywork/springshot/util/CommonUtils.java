@@ -1,4 +1,4 @@
-package com.arraywork.dep.util;
+package com.arraywork.springshot.util;
 
 import java.io.IOException;
 import java.io.InputStream;

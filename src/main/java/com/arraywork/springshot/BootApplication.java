@@ -1,4 +1,4 @@
-package com.arraywork.dep;
+package com.arraywork.springshot;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

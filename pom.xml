@@ -13,10 +13,10 @@
         <java.version>17</java.version>
     </properties>
 
-    <groupId>com.arraywork.dep</groupId>
-    <artifactId>spring-dep</artifactId>
+    <groupId>com.arraywork.springshot</groupId>
+    <artifactId>springshot</artifactId>
     <version>0.0.1</version>
-    <name>spring-dep</name>
+    <name>springshot</name>
     <description>SpringBoot Framework Dependencies</description>
 
     <dependencies>

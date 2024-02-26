@@ -1,4 +1,4 @@
-package com.arraywork.dep.util;
+package com.arraywork.springshot.util;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

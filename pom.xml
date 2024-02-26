@@ -17,7 +17,7 @@
     <artifactId>springshot</artifactId>
     <version>0.0.1</version>
     <name>springshot</name>
-    <description>SpringBoot Framework Dependencies</description>
+    <description>SpringBoot Framework Enhancement</description>
 
     <dependencies>
         <dependency>

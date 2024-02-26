@@ -15,7 +15,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 /**
- * Mailer
+ * Java Mailer
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/09

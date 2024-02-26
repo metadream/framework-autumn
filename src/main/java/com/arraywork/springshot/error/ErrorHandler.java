@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 
 /**
- * Global Error Handler
+ * Unified Error Handling
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/01/25

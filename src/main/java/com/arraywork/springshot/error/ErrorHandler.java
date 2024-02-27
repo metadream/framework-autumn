@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
@@ -67,9 +68,12 @@ public class ErrorHandler {
     }
 
     // 404
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ErrorResponse handle(NoResourceFoundException e) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, e);
+    @ExceptionHandler({
+        NoResourceFoundException.class,
+        EntityNotFoundException.class
+    })
+    public ErrorResponse handleNotFoundException(Exception e) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "Resource or entity not found.");
     }
 
     // 405

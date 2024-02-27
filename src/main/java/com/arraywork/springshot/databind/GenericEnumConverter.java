@@ -1,4 +1,4 @@
-package com.arraywork.springshot.serialize;
+package com.arraywork.springshot.databind;
 
 import java.lang.reflect.ParameterizedType;
 

@@ -13,7 +13,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 /**
  * Locale Configuration
  *
- * Add to application.properties:
+ * Add the following to application.properties:
  * spring.messages.basename = i18n/messages
  * spring.messages.fallbackToSystemLocale = false
  *

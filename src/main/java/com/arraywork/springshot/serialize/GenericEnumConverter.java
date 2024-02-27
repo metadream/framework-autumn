@@ -6,6 +6,10 @@ import jakarta.persistence.AttributeConverter;
 
 /**
  * Generic Enumeration Converter
+ *
+ * CustomEnum: public static class Converter extends GenericEnumConverter<CustomEnum, Integer> {}
+ * Entity: @Convert(converter = CustomEnum.Converter.class)
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/26

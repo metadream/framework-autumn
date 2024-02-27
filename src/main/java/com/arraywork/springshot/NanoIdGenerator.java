@@ -12,8 +12,8 @@ import com.arraywork.springshot.util.Digest;
  *
  * @Id
  * @Column(length = 24, insertable = false, updatable = false)
- * @GeneratedValue(generator = "nano-id-generator")
  * @GenericGenerator(name = "nano-id-generator", type = NanoIdGenerator.class)
+ * @GeneratedValue(generator = "nano-id-generator")
  *
  * @author AiChen
  * @copyright ArrayWork Inc.

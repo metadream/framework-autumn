@@ -9,4 +9,4 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 2024/02/05
  */
 @SpringBootApplication(scanBasePackages = "com.arraywork.springshot")
-public class BootApplication {}
+public class BaseApplication {}

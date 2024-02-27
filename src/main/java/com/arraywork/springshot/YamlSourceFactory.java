@@ -11,6 +11,10 @@ import org.springframework.core.io.support.EncodedResource;
 
 /**
  * YAML Property Source Factory
+ *
+ * @PropertySource(value = "classpath:xxx.yaml", factory = YamlSourceFactory.class, encoding = "utf-8")
+ * @ConfigurationProperties(prefix = "yyy.zzz")
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/13

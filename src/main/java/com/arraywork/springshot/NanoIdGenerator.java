@@ -9,6 +9,12 @@ import com.arraywork.springshot.util.Digest;
 
 /**
  * NanoId Generator
+ *
+ * @Id
+ * @Column(length = 24, insertable = false, updatable = false)
+ * @GeneratedValue(generator = "nano-id-generator")
+ * @GenericGenerator(name = "nano-id-generator", type = NanoIdGenerator.class)
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @created 2024/02/26

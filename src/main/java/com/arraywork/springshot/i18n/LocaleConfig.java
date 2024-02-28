@@ -11,11 +11,9 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 /**
  * Locale Configuration
- *
  * Add the following to application.properties:
  * spring.messages.basename = i18n/messages
  * spring.messages.fallbackToSystemLocale = false
- *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @created 2024/02/26
@@ -33,7 +31,6 @@ public class LocaleConfig implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver resolver = new SessionLocaleResolver();
-        System.out.println("====================================locale:" + LocaleContextHolder.getLocale());
         resolver.setDefaultLocale(LocaleContextHolder.getLocale());
         return resolver;
     }

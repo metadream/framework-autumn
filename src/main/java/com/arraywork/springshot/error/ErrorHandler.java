@@ -21,7 +21,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 
 /**
- * Unified Error Handling
+ * Unified Error Handler
+ * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/01/25

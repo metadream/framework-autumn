@@ -12,6 +12,7 @@ import com.arraywork.springshot.lib.NanoIdUtils;
 
 /**
  * Cryptography Digest
+ * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/01/25

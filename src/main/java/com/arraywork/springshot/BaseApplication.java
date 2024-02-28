@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * SringBoot Base Application
+ * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/05

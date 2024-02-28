@@ -8,6 +8,7 @@ import com.arraywork.springshot.error.HttpException;
 
 /**
  * Assertion Custom Extension
+ * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/05

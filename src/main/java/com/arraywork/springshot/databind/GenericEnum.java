@@ -2,6 +2,7 @@ package com.arraywork.springshot.databind;
 
 /**
  * Generic Enumeration
+ * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/26

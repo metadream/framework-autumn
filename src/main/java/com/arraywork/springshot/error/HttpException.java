@@ -6,6 +6,7 @@ import lombok.Getter;
 
 /**
  * Custom HTTP Exception
+ * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/05

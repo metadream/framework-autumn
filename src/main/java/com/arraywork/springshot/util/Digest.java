@@ -7,19 +7,17 @@ import java.util.UUID;
 
 import org.springframework.util.DigestUtils;
 
-import com.arraywork.springshot.lib.BCryptEncoder;
 import com.arraywork.springshot.lib.NanoIdUtils;
 
 /**
  * Cryptography Digest
- * 
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/01/25
  */
 public class Digest {
 
-    private static final BCryptEncoder bCryptEncoder = new BCryptEncoder();
     private static final char[] ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         .toCharArray();
 
@@ -31,16 +29,6 @@ public class Digest {
     // NanoID
     public static String nanoId(int length) {
         return NanoIdUtils.randomNanoId(NanoIdUtils.DEFAULT_NUMBER_GENERATOR, ALPHABET, length);
-    }
-
-    // Encode raw password
-    public static String encode(String rawPassword) {
-        return bCryptEncoder.encode(rawPassword);
-    }
-
-    // Verify passwords
-    public static boolean matches(String rawPassword, String encodedPassword) {
-        return bCryptEncoder.matches(rawPassword, encodedPassword);
     }
 
     // Hash: MD5

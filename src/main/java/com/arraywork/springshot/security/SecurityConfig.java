@@ -9,6 +9,7 @@ import com.arraywork.springshot.external.BCryptEncoder;
 
 /**
  * Security Config
+ * Inject some global attributes and beans
  *
  * @author AiChen
  * @copyright ArrayWork Inc.
@@ -20,6 +21,7 @@ public class SecurityConfig {
     @Autowired
     private SecurityContext context;
 
+    // @example: <div th:if="${principal}" th:text="${principal.username}"></div>
     @ModelAttribute("principal")
     public Principal principal() {
         return context.getPrincipal();

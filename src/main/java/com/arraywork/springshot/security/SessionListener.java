@@ -32,6 +32,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
             HttpSession authorizedSession = (HttpSession) app.getAttribute(username);
 
             if (authorizedSession != null) {
+                // Replace the session when the ID is different
                 if (!authorizedSession.getId().equals(session.getId())) {
                     authorizedSession.invalidate();
                     app.setAttribute(username, session);
@@ -48,6 +49,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
         HttpSession session = se.getSession();
         Object object = session.getAttribute(session.getId());
 
+        // Remove session by username key
         if (object != null && object instanceof Principal) {
             String username = ((Principal) object).getUsername();
             session.getServletContext().removeAttribute(username);

@@ -1,4 +1,4 @@
-package com.arraywork.springshot.lib;
+package com.arraywork.springshot.external;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

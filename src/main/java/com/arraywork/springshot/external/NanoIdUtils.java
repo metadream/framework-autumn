@@ -18,7 +18,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.arraywork.springshot.lib;
+package com.arraywork.springshot.external;
 
 import java.security.SecureRandom;
 import java.util.Random;

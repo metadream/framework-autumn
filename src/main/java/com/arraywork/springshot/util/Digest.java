@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import org.springframework.util.DigestUtils;
 
-import com.arraywork.springshot.lib.NanoIdUtils;
+import com.arraywork.springshot.external.NanoIdUtils;
 
 /**
  * Cryptography Digest

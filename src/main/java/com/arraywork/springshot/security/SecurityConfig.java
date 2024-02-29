@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import com.arraywork.springshot.lib.BCryptEncoder;
+import com.arraywork.springshot.external.BCryptEncoder;
 
 /**
  * Security Config

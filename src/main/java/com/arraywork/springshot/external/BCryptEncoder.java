@@ -1,4 +1,4 @@
-package com.arraywork.springshot.lib;
+package com.arraywork.springshot.external;
 
 import java.security.SecureRandom;
 import java.util.regex.Matcher;

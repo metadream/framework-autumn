@@ -14,6 +14,7 @@ import lombok.Data;
 @Data
 public abstract class Principal {
 
+    private String id;
     private String username;
     private String password;
 

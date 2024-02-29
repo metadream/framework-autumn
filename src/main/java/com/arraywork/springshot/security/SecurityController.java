@@ -1,5 +1,7 @@
 package com.arraywork.springshot.security;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,8 +33,9 @@ public class SecurityController {
     // Login action
     @PostMapping("/login")
     @ResponseBody
-    public Principal login(@RequestBody Principal principal) {
-        principal = service.login(principal.getUsername(), principal.getPassword());
+    public Principal login(@RequestBody Map<String, String> map) {
+        Principal principal = service.login(map.get("username"), map.get("password"));
+        principal.setPassword("***");
         context.authorize(principal);
         return principal;
     }

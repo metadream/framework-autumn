@@ -6,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation: Permission
- * @example @Permission({"ADMIN", "USER"})
+ * Annotation: Authority
+ * @example @Authority({"ADMIN", "USER"})
  *
  * @author AiChen
  * @copyright ArrayWork Inc.
@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Permission {
+public @interface Authority {
 
     String[] value() default {};
 

@@ -31,21 +31,21 @@ public class SecurityInterceptor implements HandlerInterceptor, WebMvcConfigurer
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (handler instanceof HandlerMethod) {
-            // Get @Permission annotation in controller method
+            // Get @Authority annotation in controller method
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
-            Permission permission = method.getAnnotation(Permission.class);
+            Authority authority = method.getAnnotation(Authority.class);
 
             // Annotation exists?
-            if (permission != null) {
+            if (authority != null) {
                 // Is logged in?
                 Principal principal = context.getPrincipal();
                 Assert.notNull(principal, HttpStatus.UNAUTHORIZED);
 
                 // Has any role?
-                String[] roles = permission.value();
-                boolean hasPermission = roles == null || roles.length == 0 || principal.hasAnyRole(roles);
-                Assert.isTrue(hasPermission, HttpStatus.FORBIDDEN);
+                String[] roles = authority.value();
+                boolean hasAuthority = roles == null || roles.length == 0 || principal.hasAnyRole(roles);
+                Assert.isTrue(hasAuthority, HttpStatus.FORBIDDEN);
             }
         }
         return true;

@@ -3,7 +3,6 @@ package com.arraywork.springshot.security;
 import java.lang.reflect.Method;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -11,7 +10,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.arraywork.springshot.lib.BCryptEncoder;
 import com.arraywork.springshot.util.Assert;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -56,11 +54,6 @@ public class SecurityInterceptor implements HandlerInterceptor, WebMvcConfigurer
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(this).addPathPatterns("/**");
-    }
-
-    @Bean
-    public BCryptEncoder bCryptEncoder() {
-        return new BCryptEncoder();
     }
 
 }

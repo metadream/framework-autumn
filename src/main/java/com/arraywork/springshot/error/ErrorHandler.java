@@ -10,15 +10,15 @@ import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.Data;
 
 /**
  * Unified Error Handler
@@ -27,27 +27,25 @@ import lombok.Data;
  * @copyright ArrayWork Inc.
  * @since 2024/01/25
  */
-@RestControllerAdvice
+@ControllerAdvice
 public class ErrorHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
     @Autowired
     private HttpServletRequest request;
-    @Autowired
-    private HttpServletResponse response;
 
     // Custom exception (respond with custom status)
     @ExceptionHandler(HttpException.class)
-    public ErrorResponse handle(HttpException e) {
-        return buildErrorResponse(e.getStatus(), e);
+    public String handle(HttpException e) {
+        return forwardError(e.getStatus(), e);
     }
 
     // 400: Validation exception
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResponse handle(MethodArgumentNotValidException e) {
+    public String handle(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getFieldError().getDefaultMessage();
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, message);
+        return forwardError(HttpStatus.BAD_REQUEST, message);
     }
 
     // 400
@@ -58,29 +56,30 @@ public class ErrorHandler {
         IllegalStateException.class,
         IllegalArgumentException.class
     })
-    public ErrorResponse handleBadRequest(Exception e) {
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, e);
+    public String handleBadRequest(Exception e) {
+        return forwardError(HttpStatus.BAD_REQUEST, e);
     }
 
     // 401
     @ExceptionHandler(SecurityException.class)
-    public ErrorResponse handle(SecurityException e) {
-        return buildErrorResponse(HttpStatus.UNAUTHORIZED, e);
+    public String handle(SecurityException e) {
+        return forwardError(HttpStatus.UNAUTHORIZED, e);
     }
 
     // 404
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
         NoResourceFoundException.class,
         EntityNotFoundException.class
     })
-    public ErrorResponse handleNotFoundException(Exception e) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, "Resource or entity not found.");
+    public String handleNotFoundException(Exception e) {
+        return forwardError(HttpStatus.NOT_FOUND, "Resource or entity not found.");
     }
 
     // 405
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ErrorResponse handle(HttpRequestMethodNotSupportedException e) {
-        return buildErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, e);
+    public String handle(HttpRequestMethodNotSupportedException e) {
+        return forwardError(HttpStatus.METHOD_NOT_ALLOWED, e);
     }
 
     // 415
@@ -88,49 +87,26 @@ public class ErrorHandler {
         HttpMediaTypeNotSupportedException.class,
         HttpMediaTypeNotAcceptableException.class
     })
-    public ErrorResponse handle(HttpMediaTypeNotSupportedException e) {
-        return buildErrorResponse(HttpStatus.UNSUPPORTED_MEDIA_TYPE, e);
+    public String handle(HttpMediaTypeNotSupportedException e) {
+        return forwardError(HttpStatus.UNSUPPORTED_MEDIA_TYPE, e);
     }
 
     // Uncaught exceptions
     @ExceptionHandler(Exception.class)
-    public ErrorResponse handle(Exception e) {
-        String message = e.getMessage();
-        String path = request.getRequestURI();
-        logger.error("{}: {}", message, path, e);
-
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        response.setStatus(status.value());
-        return new ErrorResponse(status.value(), status.getReasonPhrase(), path);
+    public String handle(Exception e) {
+        logger.error("{}: {}", request.getRequestURI(), e.getMessage(), e);
+        return forwardError(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
 
-    private ErrorResponse buildErrorResponse(HttpStatus status, String message) {
-        String path = request.getRequestURI();
-        logger.error("{}: {}", message, path);
-
-        response.setStatus(status.value());
-        return new ErrorResponse(status.value(), message, path);
+    private String forwardError(HttpStatus status, Exception e) {
+        return forwardError(status, e.getMessage());
     }
 
-    private ErrorResponse buildErrorResponse(HttpStatus status, Exception e) {
-        return buildErrorResponse(status, e.getMessage());
-    }
-
-    @Data
-    class ErrorResponse {
-
-        private long timestamp;
-        private int status;
-        private String message;
-        private String path;
-
-        public ErrorResponse(int status, String message, String path) {
-            this.timestamp = System.currentTimeMillis();
-            this.status = status;
-            this.message = message.replaceAll(":.+", "");
-            this.path = path;
-        }
-
+    private String forwardError(HttpStatus status, String message) {
+        logger.error("{}: {}", request.getRequestURI(), message);
+        request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, status.value());
+        request.setAttribute(RequestDispatcher.ERROR_MESSAGE, message);
+        return "forward:/error";
     }
 
 }

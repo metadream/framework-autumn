@@ -73,7 +73,7 @@ public class ErrorHandler {
         EntityNotFoundException.class
     })
     public String handleNotFoundException(Exception e) {
-        return forwardError(HttpStatus.NOT_FOUND, "Resource or entity not found.");
+        return forwardError(HttpStatus.NOT_FOUND, "Resource not found");
     }
 
     // 405

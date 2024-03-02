@@ -22,6 +22,10 @@ public class LocaleMessage {
         return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
     }
 
+    public String get(String code, Object arg) {
+        return messageSource.getMessage(code, new Object[] { arg }, LocaleContextHolder.getLocale());
+    }
+
     public String get(String code, Object[] args) {
         return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
     }

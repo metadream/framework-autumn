@@ -23,7 +23,7 @@ public class Numbers {
         if (Double.isNaN(number)) number = 0;
         BigDecimal decimal = BigDecimal.valueOf(number);
         decimal = decimal.setScale(digits, RoundingMode.HALF_UP);
-        return decimal.toString();
+        return decimal.stripTrailingZeros().toPlainString();
     }
 
     /**

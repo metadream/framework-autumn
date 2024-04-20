@@ -19,11 +19,20 @@ public class Numbers {
      * @param digits 最大保留小数位
      * @return
      */
-    public static double formatDecimal(double number, int digits) {
+    public static String formatDecimal(double number, int digits) {
         if (Double.isNaN(number)) number = 0;
         BigDecimal decimal = BigDecimal.valueOf(number);
         decimal = decimal.setScale(digits, RoundingMode.HALF_UP);
-        return decimal.doubleValue();
+        return decimal.toString();
+    }
+
+    /**
+     * 四舍五入保留小数位（不保留小数）
+     * @param number 需要转换的数字
+     * @return
+     */
+    public static String formatDecimal(double number) {
+        return formatDecimal(number, 0);
     }
 
     /**

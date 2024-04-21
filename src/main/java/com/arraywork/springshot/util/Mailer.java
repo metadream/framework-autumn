@@ -26,7 +26,7 @@ public class Mailer {
 
     private static final Logger logger = LoggerFactory.getLogger(Mailer.class);
 
-    @Autowired
+    @Autowired(required = false)
     private JavaMailSender mailSender;
     @Autowired
     private TemplateEngine templateEngine;

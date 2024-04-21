@@ -2,6 +2,7 @@ package com.arraywork.springshot.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,6 +29,11 @@ public class CommonUtils {
             if (errors != null) return errors;
         }
         return null;
+    }
+
+    // Copy array range
+    public static String[] copyOfRange(String[] source, int from, int to) {
+        return Arrays.copyOfRange(source, from, to);
     }
 
     // Manually trigger validation

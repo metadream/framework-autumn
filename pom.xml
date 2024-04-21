@@ -13,10 +13,10 @@
         <java.version>17</java.version>
     </properties>
 
-    <groupId>com.arraywork.springshot</groupId>
-    <artifactId>springshot</artifactId>
+    <groupId>com.arraywork.springless</groupId>
+    <artifactId>springless</artifactId>
     <version>0.0.1</version>
-    <name>springshot</name>
+    <name>springless</name>
     <description>SpringBoot Framework Enhancement</description>
 
     <dependencies>

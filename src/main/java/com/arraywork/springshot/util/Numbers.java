@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
- * Numbers Utils
+ * Numbers Utilities
  * @author AiChen
  */
 public class Numbers {
@@ -96,6 +96,34 @@ public class Numbers {
      */
     public static LocalDateTime formatMsTimestamp(long ms) {
         return Instant.ofEpochMilli(ms).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
+    /**
+     * 将毫秒时长转换为 HH:mm:ss.SSS 格式
+     * @param milliseconds
+     * @return
+     */
+    public static String formatDuration(double milliseconds) {
+        return formatDuration(milliseconds, false);
+    }
+
+    /**
+     * 将毫秒时长转换为 HH:mm:ss.SSS 格式
+     * @param milliseconds
+     * @param showMs 是否显示毫秒数
+     * @return
+     */
+    public static String formatDuration(double milliseconds, boolean showMs) {
+        int ms = (int) (Math.floor(milliseconds) % 1000);
+        int seconds = (int) Math.floor(milliseconds / 1000) % 60;
+        int minutes = (int) Math.floor(milliseconds / 60000) % 60;
+        int hours = (int) Math.floor(milliseconds / 3600000);
+
+        String result = "";
+        if (hours > 0) result = String.format("%02d", hours) + ":";
+        result += String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
+        if (showMs) result += "." + String.format("%03d", ms);
+        return result;
     }
 
     /**

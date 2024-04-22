@@ -1,5 +1,6 @@
 package com.arraywork.springhood.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -18,12 +19,38 @@ import jakarta.validation.Validator;
 
 /**
  * Common Utilities
- * 
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/09
  */
 public class CommonUtils {
+
+    // Thread sleep
+    public static void delay(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Copy array range
+    public static String[] copyOfRange(String[] source, int from, int to) {
+        return Arrays.copyOfRange(source, from, to);
+    }
+
+    // Walk directory and add files to argument List<File>
+    public static void walkDir(File dir, List<File> files) {
+        File[] entries = dir.listFiles();
+        for (File entry : entries) {
+            if (entry.isFile()) {
+                files.add(entry);
+            } else if (entry.isDirectory()) {
+                walkDir(entry, files);
+            }
+        }
+    }
 
     // Manually trigger validation
     public static <T> List<String> validate(T entity, String[] properties) {
@@ -40,11 +67,6 @@ public class CommonUtils {
         Set<ConstraintViolation<T>> errors = validator.validateProperty(entity, property);
         List<String> messages = errors.stream().map(e -> e.getMessage()).collect(Collectors.toList());
         return messages.isEmpty() ? null : messages;
-    }
-
-    // Copy array range
-    public static String[] copyOfRange(String[] source, int from, int to) {
-        return Arrays.copyOfRange(source, from, to);
     }
 
     // Determine whether the input source is in image format

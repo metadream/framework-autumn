@@ -9,6 +9,7 @@ import com.arraywork.springhood.util.Digest;
 
 /**
  * Long Id Generator for JPA
+ * Warning: When using longid as the primary key, you must first query to update data
  * 
  * @Id
  * @Column(length = 20, insertable = false, updatable = false)

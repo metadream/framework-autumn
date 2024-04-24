@@ -13,10 +13,10 @@
         <java.version>17</java.version>
     </properties>
 
-    <groupId>com.arraywork.springhood</groupId>
-    <artifactId>springhood</artifactId>
+    <groupId>com.arraywork.springfield</groupId>
+    <artifactId>spring-field</artifactId>
     <version>0.0.1</version>
-    <name>springhood</name>
+    <name>spring-field</name>
     <description>SpringBoot Framework Enhancement</description>
 
     <dependencies>

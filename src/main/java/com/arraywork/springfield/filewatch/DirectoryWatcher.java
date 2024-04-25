@@ -2,12 +2,16 @@ package com.arraywork.springfield.filewatch;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.boot.devtools.filewatch.ChangedFile;
 import org.springframework.boot.devtools.filewatch.ChangedFiles;
 import org.springframework.boot.devtools.filewatch.FileChangeListener;
 import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
+
+import com.arraywork.springfield.util.CommonUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,8 +39,9 @@ public class DirectoryWatcher {
     // 启动监视指定目录（可重复调用以更改目录）
     public void start(String rootDirectory) {
         stop();
+        File rootEntry = new File(rootDirectory);
         watcher = new FileSystemWatcher(true, pollInterval, quietPeriod);
-        watcher.addSourceDirectory(new File(rootDirectory));
+        watcher.addSourceDirectory(rootEntry);
         watcher.addListener(new FileChangeListener() {
 
             @Override
@@ -66,6 +71,13 @@ public class DirectoryWatcher {
 
         watcher.start();
         log.info("Directory watcher is watching on {}", rootDirectory);
+
+        // 启动后扫描所有文件
+        List<File> files = new ArrayList<>();
+        CommonUtils.walkDir(rootEntry, files);
+        for (File file : files) {
+            listener.onStarted(file);
+        }
     }
 
     // 中止监听线程

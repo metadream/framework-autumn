@@ -10,6 +10,6 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
  * @copyright ArrayWork Inc.
  * @since 2024/02/05
  */
-@SpringBootApplication(scanBasePackages = "com.arraywork.springfield")
-@ServletComponentScan("com.arraywork.springfield.security") // @WebListener support
+@SpringBootApplication(scanBasePackages = "com.arraywork.springforce")
+@ServletComponentScan("com.arraywork.springforce.security") // @WebListener support
 public class BaseApplication {}

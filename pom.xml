@@ -17,7 +17,7 @@
     <artifactId>spring-force</artifactId>
     <version>0.0.1</version>
     <name>spring-force</name>
-    <description>SpringBoot Framework Enhancement</description>
+    <description>Generic enhanced SpringBoot application dependency packages</description>
 
     <dependencies>
         <dependency>

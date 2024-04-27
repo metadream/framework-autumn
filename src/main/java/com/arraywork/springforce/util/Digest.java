@@ -20,17 +20,21 @@ import com.arraywork.springforce.external.NanoIdUtils;
 public class Digest {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    private static final char[] ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        .toCharArray();
 
-    // NanoID: 24 characters
+    // NanoID: 默认24个字符
     public static String nanoId() {
         return nanoId(24);
     }
 
-    // NanoID: specify length
+    // NanoID: 指定字符长度
     public static String nanoId(int length) {
-        return NanoIdUtils.randomNanoId(SECURE_RANDOM, ALPHABET, length);
+        return nanoId(length, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+    }
+
+    // NanoID: 指定字符长度和字母表
+    public static String nanoId(int length, String alphabet) {
+        char[] chars = alphabet.toCharArray();
+        return NanoIdUtils.randomNanoId(SECURE_RANDOM, chars, length);
     }
 
     // UUID: 128 bits, 16 bytes, 32 characters

@@ -51,17 +51,9 @@ public class DirectoryWatcher {
                         File file = changedFile.getFile();
 
                         switch (changedFile.getType()) {
-                            case ADD:
-                                listener.onAdded(file);
-                                break;
-                            case MODIFY:
-                                listener.onModified(file);
-                                break;
-                            case DELETE:
-                                listener.onDeleted(file);
-                                break;
-                            default:
-                                break;
+                            case ADD -> listener.onAdded(file);
+                            case MODIFY -> listener.onModified(file);
+                            case DELETE -> listener.onDeleted(file);
                         }
                     }
                 }
@@ -75,8 +67,10 @@ public class DirectoryWatcher {
         // 启动后扫描所有文件
         List<File> files = new ArrayList<>();
         CommonUtils.walkDir(rootEntry, files);
+        int count = 1, total = files.size();
         for (File file : files) {
-            listener.onStarted(file);
+            listener.onStarted(file, count, total);
+            count++;
         }
     }
 

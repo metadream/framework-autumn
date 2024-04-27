@@ -10,7 +10,7 @@ import java.io.File;
  */
 public interface FileSystemListener {
 
-    void onStarted(File file);
+    void onStarted(File file, int count, int total);
     void onAdded(File file);
     void onModified(File file);
     void onDeleted(File file);

@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Static Resource Request Handler
+ * WARNING: NOT SUITABLE FOR PLAYING VIDEO RESOURCES
+ * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/04/28

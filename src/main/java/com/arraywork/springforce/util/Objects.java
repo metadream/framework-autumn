@@ -35,7 +35,7 @@ public class Objects {
                         field.set(instance, value);
                         field.setAccessible(false);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        // ignores
                     }
                 }
             }

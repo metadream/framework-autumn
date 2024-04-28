@@ -27,6 +27,11 @@ public class Times {
     }
 
     // Format duration millis to HH:mm:ss
+    public static String formatDuration(double millis) {
+        return formatDuration(Double.valueOf(millis).longValue());
+    }
+
+    // Format duration millis to HH:mm:ss
     public static String formatDuration(long millis) {
         return formatDuration(millis, false);
     }

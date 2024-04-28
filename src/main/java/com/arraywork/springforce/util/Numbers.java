@@ -56,6 +56,7 @@ public class Numbers {
     }
 
     // Format bytes into a rounded string using decimal SI units.
+    // Typically used to represent disk capacity, file size
     public static String formatSiBytes(long bytes, int digits) {
         return formatBytes(bytes, digits, true);
     }

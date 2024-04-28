@@ -14,6 +14,11 @@ import org.springframework.util.StringUtils;
  */
 public class Strings {
 
+    // Determine it is a number or not
+    public static boolean isNumberic(String str) {
+        return StringUtils.hasText(str) && str.matches("-?\\d+(\\.\\d+)?");
+    }
+
     // Build query string from a map (ignores null and empty value)
     public static String buildQueryString(Map<String, String> params) throws UnsupportedEncodingException {
         StringBuilder sb = new StringBuilder();

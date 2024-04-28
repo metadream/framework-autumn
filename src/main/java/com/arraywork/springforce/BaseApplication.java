@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 
@@ -26,6 +27,13 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 @SpringBootApplication(scanBasePackages = "com.arraywork.springforce")
 @ServletComponentScan("com.arraywork.springforce.security") // @WebListener support
 public class BaseApplication {
+
+    // Get the home directory of application
+    // also where the JAR package located
+    @Bean
+    public String appHome() {
+        return new ApplicationHome().getDir().toString();
+    }
 
     // BCrypt strong hashing encoder
     @Bean

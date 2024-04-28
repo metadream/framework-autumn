@@ -15,6 +15,20 @@ import org.springframework.core.io.InputStreamSource;
  */
 public class Files {
 
+    // Get the file name without extension
+    public static String getName(String filename) {
+        if (filename == null) return null;
+        int i = filename.lastIndexOf(".");
+        return i > -1 ? filename.substring(0, i) : filename;
+    }
+
+    // Get the file extension
+    public static String getExtension(String filename) {
+        if (filename == null) return null;
+        int i = filename.lastIndexOf(".");
+        return i > -1 ? filename.substring(i) : "";
+    }
+
     // Walk directory and add files to argument List<File>
     public static void walk(File dir, List<File> files) {
         File[] entries = dir.listFiles();

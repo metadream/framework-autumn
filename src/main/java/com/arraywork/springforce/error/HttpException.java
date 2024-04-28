@@ -6,7 +6,6 @@ import lombok.Getter;
 
 /**
  * Custom HTTP Exception
- * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/05
@@ -20,6 +19,11 @@ public class HttpException extends RuntimeException {
     public HttpException(HttpStatus status) {
         super(status.getReasonPhrase());
         this.status = status;
+    }
+
+    public HttpException(String message) {
+        super(message);
+        this.status = HttpStatus.INTERNAL_SERVER_ERROR;
     }
 
     public HttpException(HttpStatus status, String message) {

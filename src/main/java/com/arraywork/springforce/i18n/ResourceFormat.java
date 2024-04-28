@@ -6,10 +6,9 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 
 /**
  * Custom Resource Format
- * 
  * @author AiChen
  * @copyright ArrayWork Inc.
- * @created 2024/03/02
+ * @since 2024/03/02
  */
 public class ResourceFormat extends ResourceBundleMessageSource {
 

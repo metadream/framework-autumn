@@ -7,10 +7,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * Locale Message Shortcuts
- * 
  * @author AiChen
  * @copyright ArrayWork Inc.
- * @created 2024/02/26
+ * @since 2024/02/26
  */
 @Component
 public class LocaleMessage {

@@ -11,12 +11,12 @@ import org.springframework.boot.devtools.filewatch.ChangedFiles;
 import org.springframework.boot.devtools.filewatch.FileChangeListener;
 import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
 
-import com.arraywork.springforce.util.CommonUtils;
+import com.arraywork.springforce.util.Files;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 目录监视器
+ * Directory Watcher
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/04/25
@@ -29,14 +29,15 @@ public class DirectoryWatcher {
     private FileSystemListener listener;
     private FileSystemWatcher watcher;
 
-    // 初始化监视器参数
+    // Initialize the water parameters
     public DirectoryWatcher(long pollInterval, long quietPeriod, FileSystemListener listener) {
         this.pollInterval = Duration.ofSeconds(pollInterval);
         this.quietPeriod = Duration.ofSeconds(quietPeriod);
         this.listener = listener;
     }
 
-    // 启动监视指定目录（可重复调用以更改目录）
+    // Start watch the specified directory
+    // (can be called repeatedly to change the directory)
     public void start(String rootDirectory) {
         stop();
         File rootEntry = new File(rootDirectory);
@@ -64,9 +65,9 @@ public class DirectoryWatcher {
         watcher.start();
         log.info("Directory watcher is watching on {}", rootDirectory);
 
-        // 启动后扫描所有文件
+        // Scan all files after starting
         List<File> files = new ArrayList<>();
-        CommonUtils.walkDir(rootEntry, files);
+        Files.walk(rootEntry, files);
         int count = 1, total = files.size();
         for (File file : files) {
             listener.onStarted(file, count, total);
@@ -74,7 +75,7 @@ public class DirectoryWatcher {
         }
     }
 
-    // 中止监听线程
+    // Kill the listening process
     public void stop() {
         if (watcher != null) {
             watcher.stop();

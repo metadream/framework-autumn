@@ -22,7 +22,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Unified Error Handler
- * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/01/25
@@ -98,10 +97,12 @@ public class ErrorHandler {
         return forwardError(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
 
+    // Forward to error route
     private String forwardError(HttpStatus status, Exception e) {
         return forwardError(status, e.getMessage());
     }
 
+    // Forward to error route
     private String forwardError(HttpStatus status, String message) {
         logger.error("{}: {}", request.getRequestURI(), message);
         request.setAttribute(RequestDispatcher.ERROR_STATUS_CODE, status.value());

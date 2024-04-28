@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Security Interceptor
- *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/29

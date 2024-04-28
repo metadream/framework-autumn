@@ -16,7 +16,6 @@ import jakarta.mail.internet.MimeMessage;
 
 /**
  * Java Mailer
- * 
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/09

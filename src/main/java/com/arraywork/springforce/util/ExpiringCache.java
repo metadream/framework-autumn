@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Expiring Cache
- * 
  * @author ChatGPT 3.5
  * @copyright ArrayWork Inc.
  * @since 2024/02/20
@@ -57,6 +56,7 @@ public class ExpiringCache<K, V> {
         scheduleCleanup();
     }
 
+    // Cache Entry with Expiration Time
     private static class CacheEntry<T> {
 
         private final T value;

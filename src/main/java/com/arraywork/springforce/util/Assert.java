@@ -7,8 +7,7 @@ import org.springframework.util.StringUtils;
 import com.arraywork.springforce.error.HttpException;
 
 /**
- * Assertion Custom Extension
- * 
+ * Custom Assertions extends Springframework
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/05

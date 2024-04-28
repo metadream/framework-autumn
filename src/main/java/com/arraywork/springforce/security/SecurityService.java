@@ -2,10 +2,9 @@ package com.arraywork.springforce.security;
 
 /**
  * Security Service
- *
  * @author AiChen
  * @copyright ArrayWork Inc.
- * @created 2024/02/28
+ * @since 2024/02/28
  */
 public interface SecurityService {
 

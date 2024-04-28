@@ -1,58 +1,38 @@
 package com.arraywork.springforce.util;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.UUID;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.springframework.util.DigestUtils;
 
-import com.arraywork.springforce.external.NanoIdUtils;
-
 /**
- * Cryptography Digest
- *
+ * Hash Digest Utilities
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/01/25
  */
 public class Digest {
 
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-
-    // NanoID: 默认24个字符
-    public static String nanoId() {
-        return nanoId(24);
+    // Signature for API request parameters
+    public static String signature(Map<String, String> params) throws UnsupportedEncodingException {
+        // Step 1. Sort the parameters by ASCII code
+        Map<String, String> treeMap = new TreeMap<>(params);
+        // Step 2. Convert the parameters to query string
+        String queryString = Strings.buildQueryString(treeMap);
+        // Step 3. Hash the query string
+        return Digest.md5(queryString);
     }
 
-    // NanoID: 指定字符长度
-    public static String nanoId(int length) {
-        return nanoId(length, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    }
-
-    // NanoID: 指定字符长度和字母表
-    public static String nanoId(int length, String alphabet) {
-        char[] chars = alphabet.toCharArray();
-        return NanoIdUtils.randomNanoId(SECURE_RANDOM, chars, length);
-    }
-
-    // UUID: 128 bits, 16 bytes, 32 characters
-    public static String uuid() {
-        return UUID.randomUUID().toString().replace("-", "").toLowerCase();
-    }
-
-    // Positive Long ID: 64 bits, 8 bytes,
-    public static long longId() {
-        return Math.abs(SECURE_RANDOM.nextLong());
-    }
-
-    // Hash: MD5
+    // MD5
     public static String md5(String str) {
         return DigestUtils.md5DigestAsHex(str.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Hash: SHA256
+    // SHA256
     public static String sha256(String str) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(str.getBytes(StandardCharsets.UTF_8));

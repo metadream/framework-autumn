@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpSessionListener;
  *
  * @author AiChen
  * @copyright ArrayWork Inc.
- * @created 2024/02/29
+ * @since 2024/02/29
  */
 @WebListener
 public class SessionListener implements HttpSessionListener, HttpSessionAttributeListener {

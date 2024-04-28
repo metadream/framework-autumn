@@ -3,22 +3,21 @@ package com.arraywork.springforce.util;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 /**
  * Numbers Utilities
  * @author AiChen
+ * @copyright ArrayWork Inc.
+ * @since 2024/03/11
  */
 public class Numbers {
 
-    /**
-     * 四舍五入保留小数位
-     * @param number 需要转换的数字
-     * @param digits 最大保留小数位
-     * @return
-     */
+    // Rounding number without decimal
+    public static String formatDecimal(double number) {
+        return formatDecimal(number, 0);
+    }
+
+    // Rounding number with decimal digits
     public static String formatDecimal(double number, int digits) {
         if (Double.isNaN(number)) number = 0;
         BigDecimal decimal = BigDecimal.valueOf(number);
@@ -26,21 +25,12 @@ public class Numbers {
         return decimal.stripTrailingZeros().toPlainString();
     }
 
-    /**
-     * 四舍五入保留小数位（不保留小数）
-     * @param number 需要转换的数字
-     * @return
-     */
-    public static String formatDecimal(double number) {
-        return formatDecimal(number, 0);
+    // Format number to percentage without decimal
+    public static String formatPercent(double number) {
+        return formatPercent(number, 0);
     }
 
-    /**
-     * 将数字转换为百分比形式
-     * @param number 需要转换的数字
-     * @param digits 最大保留小数位
-     * @return
-     */
+    // Format number to percentage with decimal
     public static String formatPercent(double number, int digits) {
         if (Double.isNaN(number)) number = 0;
         NumberFormat nf = NumberFormat.getPercentInstance();
@@ -48,96 +38,45 @@ public class Numbers {
         return nf.format(number);
     }
 
-    /**
-     * 将数字转换为百分比形式（不保留小数位）
-     * @param number
-     * @return
-     */
-    public static String formatPercent(double number) {
-        return formatPercent(number, 0);
-    }
-
-    /**
-     * 将字节数转换为人类可读形式
-     * @param bytes  需要转换的字节数
-     * @param digits 最大保留小数位
-     * @return
-     */
-    public static String formatBytes(long bytes, int digits) {
-        final long KiB = 1024;
-        final long MiB = KiB * KiB;
-        final long GiB = MiB * KiB;
-        final long TiB = GiB * KiB;
-
-        NumberFormat df = NumberFormat.getNumberInstance();
-        df.setMaximumFractionDigits(digits);
-
-        if (bytes >= TiB) return df.format(1.0 * bytes / TiB) + " TiB";
-        if (bytes >= GiB) return df.format(1.0 * bytes / GiB) + " GiB";
-        if (bytes >= MiB) return df.format(1.0 * bytes / MiB) + " MiB";
-        if (bytes >= KiB) return df.format(1.0 * bytes / KiB) + " KiB";
-        if (bytes > 0) return df.format(bytes) + " B";
-        return "0";
-    }
-
-    /**
-     * 将字节数转换为人类可读形式（最多保留1位小数）
-     * @param bytes
-     * @return
-     */
+    // Format bytes into a rounded string using IEC standard (matches Mac/Linux).
+    // default up to 1 decimal place.
     public static String formatBytes(long bytes) {
         return formatBytes(bytes, 1);
     }
 
-    /**
-     * 将毫秒时间戳转换为本地时间对象
-     * @param ms
-     * @return
-     */
-    public static LocalDateTime formatMsTimestamp(long ms) {
-        return Instant.ofEpochMilli(ms).atZone(ZoneId.systemDefault()).toLocalDateTime();
+    // Format bytes into a rounded string using IEC standard (matches Mac/Linux).
+    public static String formatBytes(long bytes, int digits) {
+        return formatBytes(bytes, digits, false);
     }
 
-    /**
-     * 将毫秒时长转换为 HH:mm:ss.SSS 格式
-     * @param milliseconds
-     * @return
-     */
-    public static String formatDuration(double milliseconds) {
-        return formatDuration(milliseconds, false);
+    // Format bytes into a rounded string using decimal SI units.
+    // default up to 1 decimal place.
+    public static String formatSiBytes(long bytes) {
+        return formatSiBytes(bytes, 1);
     }
 
-    /**
-     * 将毫秒时长转换为 HH:mm:ss.SSS 格式
-     * @param milliseconds
-     * @param showMs 是否显示毫秒数
-     * @return
-     */
-    public static String formatDuration(double milliseconds, boolean showMs) {
-        int ms = (int) (Math.floor(milliseconds) % 1000);
-        int seconds = (int) Math.floor(milliseconds / 1000) % 60;
-        int minutes = (int) Math.floor(milliseconds / 60000) % 60;
-        int hours = (int) Math.floor(milliseconds / 3600000);
-
-        String result = "";
-        if (hours > 0) result = String.format("%02d", hours) + ":";
-        result += String.format("%02d", minutes) + ":" + String.format("%02d", seconds);
-        if (showMs) result += "." + String.format("%03d", ms);
-        return result;
+    // Format bytes into a rounded string using decimal SI units.
+    public static String formatSiBytes(long bytes, int digits) {
+        return formatBytes(bytes, digits, true);
     }
 
-    /**
-     * 将秒数时长转换为日时分秒
-     * @param seconds
-     * @return
-     */
-    public static String formatSeconds(long seconds) {
-        long d = seconds / 86400;
-        long h = (seconds % 86400) / 3600;
-        long m = (seconds % 3600) / 60;
-        long s = seconds % 60;
-        return ((d > 0 ? d + "d " : "") + (h > 0 ? h + "h " : "") + (m > 0 ? m + "m " : "")
-            + (s > 0 ? s + "s" : "")).trim();
+    // Format bytes into human-readable string
+    private static String formatBytes(long bytes, int digits, boolean siKilo) {
+        String unit = siKilo ? "" : "i";
+        final long K = siKilo ? 1000 : 1024;
+        final long M = K * K;
+        final long G = M * K;
+        final long T = G * K;
+
+        NumberFormat df = NumberFormat.getNumberInstance();
+        df.setMaximumFractionDigits(digits);
+
+        if (bytes >= T) return df.format(1.0 * bytes / T) + " T" + unit + "B";
+        if (bytes >= G) return df.format(1.0 * bytes / G) + " G" + unit + "B";
+        if (bytes >= M) return df.format(1.0 * bytes / M) + " M" + unit + "B";
+        if (bytes >= K) return df.format(1.0 * bytes / K) + " K" + unit + "B";
+        if (bytes > 0) return df.format(bytes) + " B";
+        return "0";
     }
 
 }

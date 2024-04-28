@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 
+import com.arraywork.springforce.external.BCryptEncoder;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +19,6 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 /**
  * SringBoot Base Application
- *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/05
@@ -27,28 +27,34 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 @ServletComponentScan("com.arraywork.springforce.security") // @WebListener support
 public class BaseApplication {
 
-    // 覆盖默认的序列化和反序列化对象
+    // BCrypt strong hashing encoder
+    @Bean
+    public BCryptEncoder bCryptEncoder() {
+        return new BCryptEncoder();
+    }
+
+    // Overrides the default serialization and deserialization module
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        // 在反序列化时按照字母顺序对属性排序
-        mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
-        // 在反序列化时忽略 JSON 中存在但 Java 对象不存在的属性
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        // 在反序列化时将空字符串转换为NULL对象
-        mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
-        // 在序列化时忽略空的 Java 对象
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        // 在序列化时忽略值为 null 的属性
-        mapper.setSerializationInclusion(Include.NON_NULL);
-
-        // 支持 LocalDate/Time 对象序列化
+        // Support LocalDate/Time serialization
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(dtf));
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(df));
+
+        ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(javaTimeModule);
+        // Ignore unknown properties
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // Convert empty string to a NULL object
+        mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+        // Sort the attributes alphabetically
+        mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+        // Ignore null beans
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        // Ignore null properties
+        mapper.setSerializationInclusion(Include.NON_NULL);
         return mapper;
     }
 

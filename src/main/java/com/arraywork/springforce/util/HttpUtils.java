@@ -1,5 +1,8 @@
 package com.arraywork.springforce.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.web.servlet.HandlerMapping;
 
@@ -8,54 +11,44 @@ import jakarta.servlet.http.HttpServletRequest;
 /**
  * HTTP Utilities
  * @author AiChen
- * @created 2023/01/28
+ * @copyright ArrayWork Inc.
+ * @since 2024/01/25
  */
 public class HttpUtils {
 
-    private static final String[] ADDR_HEADERS = {
-        "X-Forwarded-For",
-        "Proxy-Client-IP",
-        "WL-Proxy-Client-IP",
-        "HTTP_X_FORWARDED_FOR",
-        "HTTP_X_FORWARDED",
-        "HTTP_X_CLUSTER_CLIENT_IP",
-        "HTTP_CLIENT_IP",
-        "HTTP_FORWARDED_FOR",
-        "HTTP_FORWARDED",
-        "HTTP_VIA",
-        "REMOTE_ADDR"
-    };
-
-    /**
-     * Get wildcard parameter
-     * @param request
-     * @param prefix
-     * @return
-     */
+    // Get wildcard parameter
     public static String getWildcard(HttpServletRequest request, String prefix) {
         String wildcard = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         return wildcard.replaceAll("^" + prefix, "");
     }
 
-    /**
-     * Get request ip address
-     * @param request
-     * @return
-     */
-    public static String getRequestAddr(HttpServletRequest request) {
-        for (String key : ADDR_HEADERS) {
-            String value = request.getHeader(key);
-            if (value == null || value.isEmpty()) continue;
-            return value.split("\\s*,\\s*")[0];
+    // Get client request ip address
+    public String getIpAddress(HttpServletRequest request) {
+        final String[] IP_HEADER_CANDIDATES = {
+            "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",
+            "HTTP_X_FORWARDED_FOR", "HTTP_X_FORWARDED", "HTTP_X_CLUSTER_CLIENT_IP", "HTTP_CLIENT_IP",
+            "HTTP_FORWARDED_FOR", "HTTP_FORWARDED", "HTTP_VIA", "REMOTE_ADDR"
+        };
+
+        for (String header : IP_HEADER_CANDIDATES) {
+            String address = request.getHeader(header);
+            if (address != null && !address.isBlank() && !"unknown".equalsIgnoreCase(address)) {
+                return address.split("\\s*,\\s*")[0];
+            }
         }
-        return request.getRemoteAddr();
+
+        String ipAddress = request.getRemoteAddr();
+        if ("127.0.0.1".equals(ipAddress) || "0:0:0:0:0:0:0:1".equals(ipAddress)) {
+            try {
+                ipAddress = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+        }
+        return ipAddress;
     }
 
-    /**
-     * Determine address is internal
-     * @param addr
-     * @return
-     */
+    // Determine address is internal or not
     public static boolean isInternalAddr(String addr) {
         if (!Strings.isBlank(addr)) {
             if ("127.0.0.1".equals(addr) || "localhost".equals(addr)) return true;

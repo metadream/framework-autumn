@@ -12,10 +12,9 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 /**
  * Locale Configuration
- * 
  * @author AiChen
  * @copyright ArrayWork Inc.
- * @created 2024/02/26
+ * @since 2024/02/26
  */
 @Configuration
 public class LocaleConfig implements WebMvcConfigurer {

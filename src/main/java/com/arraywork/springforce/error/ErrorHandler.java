@@ -1,5 +1,6 @@
 package com.arraywork.springforce.error;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,12 @@ public class ErrorHandler {
 
     @Autowired
     private HttpServletRequest request;
+
+    @ExceptionHandler(ClientAbortException.class)
+    public void handleClientAbort(ClientAbortException e) {
+        // Ignore the ClientAbortException warning
+        logger.warn("Ignored: {} - {}", request.getRequestURI(), e.getMessage());
+    }
 
     // Custom exception (respond with custom status)
     @ExceptionHandler(HttpException.class)

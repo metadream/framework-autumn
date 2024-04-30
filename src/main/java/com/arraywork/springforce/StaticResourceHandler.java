@@ -73,31 +73,30 @@ public class StaticResourceHandler {
         String mimeType = request.getServletContext().getMimeType(resource.getFilename());
         response.setContentType(mimeType);
         response.setDateHeader(HttpHeaders.LAST_MODIFIED, lastModified);
+        response.setBufferSize(DEFAULT_BUFFER_SIZE);
 
         // Streaming resource bytes
         try (InputStream input = resource.getInputStream();
             OutputStream output = response.getOutputStream()) {
             copy(input, output, start, end);
+            input.close();
+            output.close();
         }
     }
 
     // Copy input stream to output stream by start-end
-    private void copy(InputStream input, OutputStream output, long start, long end) throws IOException {
+    private long copy(InputStream input, OutputStream output, long start, long end) throws IOException {
         input.skip(start);
-        long toCopy = end;
+        long copied = 0;
         int read = -1;
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 
-        while ((read = input.read(buffer)) > 0) {
-            if ((toCopy -= read) > 0) {
-                output.write(buffer, 0, read);
-                output.flush();
-            } else {
-                output.write(buffer, 0, (int) toCopy + read);
-                output.flush();
-                break;
-            }
+        while ((read = input.read(buffer)) != -1) {
+            output.write(buffer, 0, read);
+            copied += read;
         }
+        output.flush();
+        return copied;
     }
 
     // Check last modified or not

@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.async.AsyncRequestNotUsableException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -35,7 +36,10 @@ public class ErrorHandler {
     @Autowired
     private HttpServletRequest request;
 
-    @ExceptionHandler(ClientAbortException.class)
+    // When dragging the progress bar of the output video stream, it is easy to
+    // cause these exception and fall into an infinite loop, eventually causing the
+    // system to crash. Ignoring them has not been found to have any impact.
+    @ExceptionHandler({ ClientAbortException.class, AsyncRequestNotUsableException.class })
     public void handleClientAbort(ClientAbortException e) {
         // Ignore the ClientAbortException warning
         logger.warn("Ignored: {} - {}", request.getRequestURI(), e.getMessage());

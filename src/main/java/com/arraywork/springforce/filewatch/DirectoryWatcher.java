@@ -47,14 +47,19 @@ public class DirectoryWatcher {
 
             @Override
             public void onChange(Set<ChangedFiles> changeSet) {
+
                 for (ChangedFiles files : changeSet) {
-                    for (ChangedFile changedFile : files.getFiles()) {
+                    Set<ChangedFile> changedFiles = files.getFiles();
+                    int count = 0, total = changedFiles.size();
+
+                    for (ChangedFile changedFile : changedFiles) {
+                        count++;
                         File file = changedFile.getFile();
 
                         switch (changedFile.getType()) {
-                            case ADD -> listener.onAdded(file);
-                            case MODIFY -> listener.onModified(file);
-                            case DELETE -> listener.onDeleted(file);
+                            case ADD -> listener.onAdded(file, count, total);
+                            case MODIFY -> listener.onModified(file, count, total);
+                            case DELETE -> listener.onDeleted(file, count, total);
                         }
                     }
                 }

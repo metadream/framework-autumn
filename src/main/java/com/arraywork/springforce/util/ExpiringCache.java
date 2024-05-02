@@ -6,12 +6,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.stereotype.Component;
+
 /**
  * Expiring Cache
  * @author ChatGPT 3.5
  * @copyright ArrayWork Inc.
  * @since 2024/02/20
  */
+@Component
 public class ExpiringCache<K, V> {
 
     private final Map<K, CacheEntry<V>> cache = new ConcurrentHashMap<>();

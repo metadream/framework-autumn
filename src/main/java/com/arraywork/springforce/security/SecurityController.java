@@ -21,7 +21,7 @@ public class SecurityController {
 
     @Autowired
     private SecurityContext context;
-    @Autowired
+    @Autowired(required = false)
     private SecurityService service;
 
     // Login page

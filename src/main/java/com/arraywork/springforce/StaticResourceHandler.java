@@ -78,14 +78,14 @@ public class StaticResourceHandler {
         // Streaming resource bytes
         try (InputStream input = resource.getInputStream();
             OutputStream output = response.getOutputStream()) {
-            copy(input, output, start, end);
+            copy(input, output, start);
             input.close();
             output.close();
         }
     }
 
-    // Copy input stream to output stream by start-end
-    private long copy(InputStream input, OutputStream output, long start, long end) throws IOException {
+    // Copy input stream to output stream by start
+    public long copy(InputStream input, OutputStream output, long start) throws IOException {
         input.skip(start);
         long copied = 0;
         int read = -1;
@@ -97,6 +97,11 @@ public class StaticResourceHandler {
         }
         output.flush();
         return copied;
+    }
+
+    // Copy input stream to output stream
+    public long copy(InputStream input, OutputStream output) throws IOException {
+        return copy(input, output, 0);
     }
 
     // Check last modified or not

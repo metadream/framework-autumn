@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @since 2024/02/29
  */
 @Controller
-public abstract class SecurityController {
+public class SecurityController {
 
     @Autowired
     private SecurityContext context;

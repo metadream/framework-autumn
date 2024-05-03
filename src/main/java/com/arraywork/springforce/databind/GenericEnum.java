@@ -1,5 +1,7 @@
 package com.arraywork.springforce.databind;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * Generic Enumeration
  * @author AiChen
@@ -8,6 +10,10 @@ package com.arraywork.springforce.databind;
  */
 public interface GenericEnum<T> {
 
+    // Use the corresponding value of @JsonValue when passing parameters and
+    // returning, overriding the original default implementation of deserialization
+    // from literals back to enumerations
+    @JsonValue
     T getCode();
 
 }

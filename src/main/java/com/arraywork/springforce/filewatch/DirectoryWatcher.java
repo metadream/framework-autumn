@@ -38,7 +38,7 @@ public class DirectoryWatcher {
 
     // Start watch the specified directory
     // (can be called repeatedly to change the directory)
-    public void start(String rootDirectory) {
+    public void start(String rootDirectory, boolean emitOnStart) {
         stop();
         File rootEntry = new File(rootDirectory);
         watcher = new FileSystemWatcher(true, pollInterval, quietPeriod);
@@ -71,12 +71,14 @@ public class DirectoryWatcher {
         log.info("Directory watcher is watching on {}", rootDirectory);
 
         // Scan all files after starting
-        List<File> files = new ArrayList<>();
-        Files.walk(rootEntry, files);
-        int count = 1, total = files.size();
-        for (File file : files) {
-            listener.onStarted(file, count, total);
-            count++;
+        if (emitOnStart) {
+            List<File> files = new ArrayList<>();
+            Files.walk(rootEntry, files);
+            int count = 1, total = files.size();
+            for (File file : files) {
+                listener.onStarted(file, count, total);
+                count++;
+            }
         }
     }
 

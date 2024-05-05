@@ -14,6 +14,11 @@ import java.util.function.Predicate;
  */
 public class Arrays {
 
+    // Is empty or not?
+    public static boolean isEmpty(String[] array) {
+        return array == null || array.length == 0;
+    }
+
     // Truncate a portion of the array
     public static String[] slice(String[] source, int from, int to) {
         return java.util.Arrays.copyOfRange(source, from, to);

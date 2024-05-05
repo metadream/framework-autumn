@@ -1,5 +1,6 @@
 package com.arraywork.springforce.security;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,9 @@ public class SecurityInterceptor implements HandlerInterceptor, WebMvcConfigurer
     private SecurityContext context;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+        throws IOException {
+
         if (handler instanceof HandlerMethod) {
             // Get @Authority annotation in controller method
             HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -39,7 +42,10 @@ public class SecurityInterceptor implements HandlerInterceptor, WebMvcConfigurer
             if (authority != null) {
                 // Is logged in?
                 Principal principal = context.getPrincipal();
-                Assert.notNull(principal, HttpStatus.UNAUTHORIZED);
+                if (principal == null) {
+                    response.sendRedirect("/login");
+                    return false;
+                }
 
                 // Has any role?
                 String[] roles = authority.value();

@@ -1,5 +1,6 @@
 package com.arraywork.springforce;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -102,6 +103,15 @@ public class StaticResourceHandler {
     // Copy input stream to output stream
     public long copy(InputStream input, OutputStream output) throws IOException {
         return copy(input, output, 0);
+    }
+
+    // Close stream quietly
+    public void close(Closeable closeable) {
+        try {
+            if (closeable != null) closeable.close();
+        } catch (IOException e) {
+            // ignore
+        }
     }
 
     // Check last modified or not

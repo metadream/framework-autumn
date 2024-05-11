@@ -42,10 +42,7 @@ public class SecurityInterceptor implements HandlerInterceptor, WebMvcConfigurer
             if (authority != null) {
                 // Is logged in?
                 Principal principal = context.getPrincipal();
-                if (principal == null) {
-                    response.sendRedirect("/login");
-                    return false;
-                }
+                Assert.notNull(principal, HttpStatus.UNAUTHORIZED);
 
                 // Has any role?
                 String[] roles = authority.value();

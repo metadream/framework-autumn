@@ -14,9 +14,14 @@ import org.springframework.util.StringUtils;
  */
 public class Strings {
 
+    // Determine it is a positive integer or not
+    public static boolean isInteger(String s) {
+        return StringUtils.hasText(s) && s.matches("\\d+");
+    }
+
     // Determine it is a number or not
-    public static boolean isNumberic(String str) {
-        return StringUtils.hasText(str) && str.matches("-?\\d+(\\.\\d+)?");
+    public static boolean isNumberic(String s) {
+        return StringUtils.hasText(s) && s.matches("-?\\d+(\\.\\d+)?");
     }
 
     // Build query string from a map (ignores null and empty value)

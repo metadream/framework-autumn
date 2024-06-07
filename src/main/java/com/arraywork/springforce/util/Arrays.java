@@ -1,10 +1,10 @@
 package com.arraywork.springforce.util;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Array and List Utilities
@@ -26,7 +26,7 @@ public class Arrays {
 
     // Find any matched elements in array
     public static <T> T findAny(T[] array, Predicate<T> predicate) {
-        List<T> list = new ArrayList<>(List.of(array));
+        List<T> list = java.util.Arrays.asList(array);
         return findAny(list, predicate);
     }
 
@@ -37,18 +37,18 @@ public class Arrays {
 
     // Find all matched elements in array
     public static <T> List<T> filter(T[] array, Predicate<T> predicate) {
-        List<T> list = new ArrayList<>(List.of(array));
-        return list.stream().filter(predicate).toList();
+        List<T> list = java.util.Arrays.asList(array);
+        return list.stream().filter(predicate).collect(Collectors.toList());
     }
 
     // Find all matched elements in list
     public static <T> List<T> filter(Collection<T> list, Predicate<T> predicate) {
-        return list.stream().filter(predicate).toList();
+        return list.stream().filter(predicate).collect(Collectors.toList());
     }
 
     // Combine specific elements in a list into a new list
     public static <T, R> List<R> map(Collection<T> list, Function<T, R> mapper) {
-        return list.stream().map(mapper).toList();
+        return list.stream().map(mapper).collect(Collectors.toList());
     }
 
 }

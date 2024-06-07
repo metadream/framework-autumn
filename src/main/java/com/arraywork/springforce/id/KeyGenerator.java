@@ -1,4 +1,4 @@
-package com.arraywork.springforce.util;
+package com.arraywork.springforce.id;
 
 import java.io.Serializable;
 import java.security.SecureRandom;

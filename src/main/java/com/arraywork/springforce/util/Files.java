@@ -3,6 +3,7 @@ package com.arraywork.springforce.util;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 
 import org.springframework.core.io.InputStreamSource;
@@ -39,6 +40,12 @@ public class Files {
                 walk(entry, files);
             }
         }
+    }
+
+    // Get creation time
+    public static long getCreationTime(File file) throws IOException {
+        BasicFileAttributes attrs = java.nio.file.Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+        return attrs.creationTime().toMillis();
     }
 
     // Determine input stream is image format or not

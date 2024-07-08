@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import com.arraywork.springforce.external.BCryptEncoder;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -39,6 +40,12 @@ public class BaseApplication {
     @Bean
     public BCryptEncoder bCryptEncoder() {
         return new BCryptEncoder();
+    }
+
+    // Web socket endpoint
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        return new ServerEndpointExporter();
     }
 
     // Overrides the default serialization and deserialization module

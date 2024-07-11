@@ -1,10 +1,9 @@
 package com.arraywork.springforce.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.regex.Pattern;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -15,49 +14,79 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Open Computer Vision Utils
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/07/10
  */
+@Slf4j
 public class OpenCv {
+
+    private static final String WINDOWS_LIB_NAME = "opencv_java4100.dll";
+    private static final String LINUX_LIB_NAME = "libopencv_java4100.so";
+    private static final int DEFAULT_QUALITY = 75;
 
     /**
      * 根据操作系统加载不同的外部库（仅在启动时调用一次）
+     * 需将opencv库放置在resources/opencv目录下
      */
     public static void loadLibrary() {
-        String osName = System.getProperty("os.name").toLowerCase();
-        String libName = osName.contains("windows") ? "opencv_java4100.dll" : "libopencv_java4100.so";
+        String libName = isWindows() ? WINDOWS_LIB_NAME : LINUX_LIB_NAME;
         URL url = ClassLoader.getSystemResource("opencv/" + libName);
         System.load(url.getPath());
     }
 
     /**
      * 捕获视频并截取相同纵横比的缩略图
+     * Windows下不支持中文路径
      * @param input
      * @param output
      * @param longSide 长边值
      * @return
      */
-    public static boolean captureVideo(String input, String output, int longSide) {
+    public static void captureVideo(String input, String output, int longSide) {
         checkPath(input, output);
-        VideoCapture capture = new VideoCapture(input);
-        Assert.isTrue(capture.isOpened(), "Cannot open the video: " + input);
+        VideoCapture capture = null;
+        try {
+            capture = new VideoCapture(input);
+            Assert.isTrue(capture.isOpened(), "Cannot open the video: " + input);
 
-        // 为避免前几帧的空白或空黑画面、同时避免超过总帧数，此处自动截取整个视频的中间帧
-        // 如果使用CAP_PROP_POS_FRAMES或CAP_PROP_POS_MSEC设置精确的中间帧，则会非常慢
-        // CAP_PROP_POS_AVI_RATIO采用相对的、粗略的位置（取值0.0-1.0），速度非常快
-        capture.set(Videoio.CAP_PROP_POS_AVI_RATIO, 0.5);
+            // 为避免前几帧的空白或空黑画面、同时避免超过总帧数，此处自动截取整个视频的中间帧
+            // 1. 在windows上，如果使用CAP_PROP_POS_FRAMES或CAP_PROP_POS_MSEC设置精确的中间帧会非常慢
+            // CAP_PROP_POS_AVI_RATIO采用相对的、粗略的位置（取值0.0-1.0），速度非常快
+            // capture.set(Videoio.CAP_PROP_POS_AVI_RATIO, 0.5);
+            // 2. 但在Linux上，CAP_PROP_POS_AVI_RATIO参数不起作用，因此改用CAP_PROP_POS_FRAMES
+            // 速度也非常快。可能不同操作系统的opencv库寻帧的方式不同。
+            int frames = (int) capture.get(Videoio.CAP_PROP_FRAME_COUNT);
+            capture.set(Videoio.CAP_PROP_POS_FRAMES, frames / 2);
 
-        Mat mat = new Mat();
-        if (capture.read(mat)) {
+            Mat mat = new Mat();
+            Assert.isTrue(capture.read(mat), "Cannot read the video: " + input);
+
             Size size = calcSize(mat.width(), mat.height(), longSide);
             Imgproc.resize(mat, mat, size, 0, 0, Imgproc.INTER_AREA);
-            return Imgcodecs.imwrite(output, mat);
+            boolean success = Imgcodecs.imwrite(output, mat);
+            Assert.isTrue(success, "Cannot write image to output: " + output);
+        } catch (Exception e) {
+            log.error("Capture video failed: " + input, e);
+            throw new RuntimeException("Capture video failed: " + input);
+        } finally {
+            if (capture != null) {
+                capture.release();
+            }
         }
-        capture.release();
-        return false;
+    }
+
+    public static void resizeImage(String input, String output, int longSide) {
+        resizeImage(input, output, longSide, DEFAULT_QUALITY);
+    }
+
+    public static void resizeImage(String input, String output, int longSide, int quality) {
+        if (isWindows()) resizeImageUnicode(input, output, longSide, quality);
+        else resizeImageNative(input, output, longSide, quality);
     }
 
     /**
@@ -68,64 +97,49 @@ public class OpenCv {
      * @param quality 质量（0-100）
      * @return
      */
-    public static boolean resizeImage(String input, String output, int longSide, int quality) {
+    private static void resizeImageNative(String input, String output, int longSide, int quality) {
         checkPath(input, output);
         try {
             Mat src = Imgcodecs.imread(input);
             Mat dist = new Mat();
             Size size = calcSize(src.width(), src.height(), longSide);
-
             Imgproc.resize(src, dist, size, 0, 0, Imgproc.INTER_AREA);
             MatOfInt params = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, quality);
-            return Imgcodecs.imwrite(output, dist, params);
+
+            boolean success = Imgcodecs.imwrite(output, dist, params);
+            Assert.isTrue(success, "Cannot write image to output: " + output);
         } catch (Exception e) {
-            throw new RuntimeException("Resize image error");
+            log.error("Resize image failed: " + input, e);
+            throw new RuntimeException("Resize image failed: " + input);
         }
     }
 
-    public static void resizeImage2(String input, String output, int longSide, int quality) {
+    /**
+     * 缩放图片（输入或输出路径中含有Unicode字符，例如在Windows中不支持中文路径）
+     * 用Java读取文件的速度比原生opencv略慢
+     * @param input
+     * @param output
+     * @param longSide
+     * @param quality
+     */
+    private static void resizeImageUnicode(String input, String output, int longSide, int quality) {
         checkPath(input, output);
         try {
-            byte[] bytes = java.nio.file.Files.readAllBytes(Path.of(input));
+            byte[] bytes = Files.readAllBytes(Path.of(input));
             Mat src = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.IMREAD_UNCHANGED);
 
             Mat dist = new Mat();
             Size size = calcSize(src.width(), src.height(), longSide);
-
             Imgproc.resize(src, dist, size, 0, 0, Imgproc.INTER_AREA);
             MatOfInt params = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, quality);
 
             MatOfByte buff = new MatOfByte();
             Imgcodecs.imencode(".jpg", dist, buff, params);
-            java.nio.file.Files.write(Path.of(output), buff.toArray());
-
+            Files.write(Path.of(output), buff.toArray());
         } catch (Exception e) {
-            throw new RuntimeException("Resize image error");
+            log.error("Resize image failed: " + input, e);
+            throw new RuntimeException("Resize image failed: " + input);
         }
-    }
-
-    /**
-     * 按相同纵横比缩放图片（质量75%）
-     * @param input
-     * @param output
-     * @param longSide 长边值
-     * @return
-     */
-    public static void resizeImage(String input, String output, int longSide) {
-        resizeImage(input, output, longSide, 75);
-    }
-
-    private static Mat safeRead(String input) throws IOException {
-        if (isContainChinese(input)) {
-            byte[] bytes = java.nio.file.Files.readAllBytes(Path.of(input));
-            return Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.IMREAD_UNCHANGED);
-        }
-        return Imgcodecs.imread(input);
-    }
-
-    public static boolean isContainChinese(String str) {
-        Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
-        return p.matcher(str).find();
     }
 
     // 校验输入文件是否存在，自动创建输出目录
@@ -151,6 +165,12 @@ public class OpenCv {
             }
         }
         return new Size(width, height);
+    }
+
+    // 判断是否Windows操作系统
+    private static boolean isWindows() {
+        String osName = System.getProperty("os.name").toLowerCase();
+        return osName.contains("windows");
     }
 
 }

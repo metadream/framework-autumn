@@ -14,7 +14,7 @@ import org.springframework.core.io.InputStreamSource;
  * @copyright ArrayWork Inc.
  * @since 2024/04/28
  */
-public class Files {
+public class FileUtils {
 
     // Get the file name without extension
     public static String getName(String filename) {

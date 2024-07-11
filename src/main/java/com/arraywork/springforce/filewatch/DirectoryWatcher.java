@@ -11,7 +11,7 @@ import org.springframework.boot.devtools.filewatch.ChangedFiles;
 import org.springframework.boot.devtools.filewatch.FileChangeListener;
 import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
 
-import com.arraywork.springforce.util.Files;
+import com.arraywork.springforce.util.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,7 +73,7 @@ public class DirectoryWatcher {
         // Scan all files after starting
         if (emitOnStart) {
             List<File> files = new ArrayList<>();
-            Files.walk(rootEntry, files);
+            FileUtils.walk(rootEntry, files);
             int count = 1, total = files.size();
             for (File file : files) {
                 listener.onStarted(file, count, total);

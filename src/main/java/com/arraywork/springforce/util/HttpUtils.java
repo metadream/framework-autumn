@@ -17,9 +17,10 @@ import jakarta.servlet.http.HttpServletRequest;
 public class HttpUtils {
 
     // Get wildcard parameter
-    public static String getWildcard(HttpServletRequest request, String prefix) {
-        String wildcard = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-        return wildcard.replaceAll("^" + prefix, "");
+    public static String getWildcard(HttpServletRequest request) {
+        String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        String pattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+        return path.replace(pattern.replace("/**", ""), "");
     }
 
     // Get client request ip address

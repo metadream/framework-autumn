@@ -1,9 +1,13 @@
 package com.arraywork.springforce.util;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
@@ -66,13 +70,38 @@ public class OpenCv {
      */
     public static boolean resizeImage(String input, String output, int longSide, int quality) {
         checkPath(input, output);
-        Mat src = Imgcodecs.imread(input);
+        try {
+            Mat src = Imgcodecs.imread(input);
+            Mat dist = new Mat();
+            Size size = calcSize(src.width(), src.height(), longSide);
 
-        Mat dist = new Mat();
-        Size size = calcSize(src.width(), src.height(), longSide);
-        Imgproc.resize(src, dist, size, 0, 0, Imgproc.INTER_AREA);
-        MatOfInt params = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, quality);
-        return Imgcodecs.imwrite(output, dist, params);
+            Imgproc.resize(src, dist, size, 0, 0, Imgproc.INTER_AREA);
+            MatOfInt params = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, quality);
+            return Imgcodecs.imwrite(output, dist, params);
+        } catch (Exception e) {
+            throw new RuntimeException("Resize image error");
+        }
+    }
+
+    public static void resizeImage2(String input, String output, int longSide, int quality) {
+        checkPath(input, output);
+        try {
+            byte[] bytes = java.nio.file.Files.readAllBytes(Path.of(input));
+            Mat src = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.IMREAD_UNCHANGED);
+
+            Mat dist = new Mat();
+            Size size = calcSize(src.width(), src.height(), longSide);
+
+            Imgproc.resize(src, dist, size, 0, 0, Imgproc.INTER_AREA);
+            MatOfInt params = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, quality);
+
+            MatOfByte buff = new MatOfByte();
+            Imgcodecs.imencode(".jpg", dist, buff, params);
+            java.nio.file.Files.write(Path.of(output), buff.toArray());
+
+        } catch (Exception e) {
+            throw new RuntimeException("Resize image error");
+        }
     }
 
     /**
@@ -82,16 +111,29 @@ public class OpenCv {
      * @param longSide 长边值
      * @return
      */
-    public static boolean resizeImage(String input, String output, int longSide) {
-        return resizeImage(input, output, longSide, 75);
+    public static void resizeImage(String input, String output, int longSide) {
+        resizeImage(input, output, longSide, 75);
     }
 
-    // 校验输入输出文件是否存在
+    private static Mat safeRead(String input) throws IOException {
+        if (isContainChinese(input)) {
+            byte[] bytes = java.nio.file.Files.readAllBytes(Path.of(input));
+            return Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.IMREAD_UNCHANGED);
+        }
+        return Imgcodecs.imread(input);
+    }
+
+    public static boolean isContainChinese(String str) {
+        Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+        return p.matcher(str).find();
+    }
+
+    // 校验输入文件是否存在，自动创建输出目录
     private static void checkPath(String input, String output) {
         File file = new File(input);
         Assert.isTrue(file.exists(), "Input file not found: " + file);
         File dir = new File(output).getParentFile();
-        Assert.isTrue(dir.exists(), "Output path not found: " + dir);
+        if (!dir.exists()) dir.mkdirs();
     }
 
     // 计算缩放后的尺寸

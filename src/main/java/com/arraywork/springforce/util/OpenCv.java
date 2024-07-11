@@ -147,7 +147,7 @@ public class OpenCv {
         File file = new File(input);
         Assert.isTrue(file.exists(), "Input file not found: " + file);
         File dir = new File(output).getParentFile();
-        if (!dir.exists()) dir.mkdirs();
+        if (dir != null && !dir.exists()) dir.mkdirs();
     }
 
     // 计算缩放后的尺寸

@@ -1,7 +1,7 @@
 package com.arraywork.springforce.util;
 
 import java.io.File;
-import java.net.URL;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -13,6 +13,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
+import org.springframework.boot.system.ApplicationHome;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,12 +32,14 @@ public class OpenCv {
 
     /**
      * 根据操作系统加载不同的外部库（仅在启动时调用一次）
-     * 需将opencv库放置在resources/opencv目录下
+     * 需将opencv库放置在项目/opencv目录下（部署时与jar包并列）
+     * @throws IOException 
      */
     public static void loadLibrary() {
+        String appHome = new ApplicationHome().getDir().toString();
         String libName = isWindows() ? WINDOWS_LIB_NAME : LINUX_LIB_NAME;
-        URL url = ClassLoader.getSystemResource("opencv/" + libName);
-        System.load(url.getPath());
+        String libPath = Path.of(appHome, "opencv", libName).toString();
+        System.load(libPath);
     }
 
     /**

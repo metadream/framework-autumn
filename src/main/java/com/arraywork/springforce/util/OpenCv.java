@@ -1,7 +1,6 @@
 package com.arraywork.springforce.util;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -26,19 +25,20 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OpenCv {
 
-    private static final String WINDOWS_LIB_NAME = "opencv_java4100.dll";
-    private static final String LINUX_LIB_NAME = "libopencv_java4100.so";
+    // 输出图像默认质量75%
     private static final int DEFAULT_QUALITY = 75;
 
     /**
-     * 根据操作系统加载不同的外部库（仅在启动时调用一次）
-     * 需将opencv库放置在项目/opencv目录下（部署时与jar包并列）
-     * @throws IOException 
+     * 根据路径加载OpenCv库（相对路径则从项目根目录查找）
+     * Windows -> /path/to/opencv_java4100.dll
+     * Linux -> /path/to/libopencv_java4100.so
+     * @param libPath
      */
-    public static void loadLibrary() {
-        String appHome = new ApplicationHome().getDir().toString();
-        String libName = isWindows() ? WINDOWS_LIB_NAME : LINUX_LIB_NAME;
-        String libPath = Path.of(appHome, "opencv", libName).toString();
+    public static void loadLibrary(String libPath) {
+        if (!Path.of(libPath).isAbsolute()) {
+            String appHome = new ApplicationHome().getDir().toString();
+            libPath = Path.of(appHome, libPath).toString();
+        }
         System.load(libPath);
     }
 

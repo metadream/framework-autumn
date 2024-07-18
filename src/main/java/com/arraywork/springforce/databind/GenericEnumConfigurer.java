@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * Generic Enumeration Configuration
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/05/03

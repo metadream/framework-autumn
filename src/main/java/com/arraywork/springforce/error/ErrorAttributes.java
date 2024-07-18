@@ -1,6 +1,7 @@
 package com.arraywork.springforce.error;
 
 import java.util.Map;
+import jakarta.servlet.RequestDispatcher;
 
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -8,12 +9,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.WebRequest;
 
-import jakarta.servlet.RequestDispatcher;
-
 /**
  * Unified error message format
  * Override SpringBoot's default error attributes
- * 
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2020/03/01

@@ -9,11 +9,13 @@ import org.hibernate.annotations.IdGeneratorType;
 
 /**
  * Nano Id Generation Annotation
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/06/07
  */
-@Target({ ElementType.METHOD, ElementType.FIELD })
+@Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @IdGeneratorType(KeyGenerator.NanoId.class)
-public @interface NanoIdGeneration {}
+public @interface NanoIdGeneration {
+}

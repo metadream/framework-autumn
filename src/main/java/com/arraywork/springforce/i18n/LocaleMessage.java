@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * Locale Message Shortcuts
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/26
@@ -22,7 +23,7 @@ public class LocaleMessage {
     }
 
     public String get(String code, Object arg) {
-        return messageSource.getMessage(code, new Object[] { arg }, LocaleContextHolder.getLocale());
+        return messageSource.getMessage(code, new Object[]{arg}, LocaleContextHolder.getLocale());
     }
 
     public String get(String code, Object[] args) {

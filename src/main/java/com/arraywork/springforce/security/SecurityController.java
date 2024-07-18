@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Security Controller
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/29

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 /**
  * Locale Configuration
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/26

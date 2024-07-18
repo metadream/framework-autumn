@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation: Authority
- * @example @Authority({"ADMIN", "USER"})
+ * example @Authority({"ADMIN", "USER"})
  *
  * @author AiChen
  * @copyright ArrayWork Inc.

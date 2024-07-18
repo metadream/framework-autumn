@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 /**
  * Array and List Utilities
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/04/28

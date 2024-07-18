@@ -1,11 +1,10 @@
 package com.arraywork.springforce.databind;
 
 import java.lang.reflect.ParameterizedType;
+import jakarta.persistence.AttributeConverter;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.converter.ConverterFactory;
-
-import jakarta.persistence.AttributeConverter;
 
 /**
  * Generic Enumeration Converter
@@ -17,7 +16,7 @@ import jakarta.persistence.AttributeConverter;
  * @since 2024/02/26
  */
 public class GenericEnumConverter<X extends GenericEnum<Y>, Y>
-    implements AttributeConverter<X, Y>, ConverterFactory<String, GenericEnum<?>> {
+        implements AttributeConverter<X, Y>, ConverterFactory<String, GenericEnum<?>> {
 
     // Implement the ConverterFactory method to convert the code in the 'GET'
     // request into an enumeration type
@@ -47,13 +46,8 @@ public class GenericEnumConverter<X extends GenericEnum<Y>, Y>
 
     // Convert the object (usually basic types such as integer and string) to
     // generic enumeration
-    private class StringToEnumConverter<T extends GenericEnum<?>> implements Converter<String, T> {
-
-        private Class<T> targetType;
-
-        public StringToEnumConverter(Class<T> targetType) {
-            this.targetType = targetType;
-        }
+    private record StringToEnumConverter<T extends GenericEnum<?>>(
+            Class<T> targetType) implements Converter<String, T> {
 
         @Override
         public T convert(String source) {

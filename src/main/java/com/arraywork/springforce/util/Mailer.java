@@ -1,6 +1,8 @@
 package com.arraywork.springforce.util;
 
 import java.util.Map;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,11 +13,9 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-
 /**
  * Java Mailer
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/09

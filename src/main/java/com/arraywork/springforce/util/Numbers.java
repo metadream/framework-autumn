@@ -6,6 +6,7 @@ import java.text.NumberFormat;
 
 /**
  * Numbers Utilities
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/03/11

@@ -1,5 +1,6 @@
 package com.arraywork.springforce.id;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import com.arraywork.springforce.external.NanoIdUtils;
 
 /**
  * Unique Primary Key Generator
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/01/25
@@ -46,6 +48,7 @@ public class KeyGenerator {
 
     /**
      * NanoID Generator Class for JPA
+     *
      * @Id
      * @Column(length = 24, insertable = false, updatable = false)
      * @GenericGenerator(name = "nano-id-generator", type = KeyGenerator.NanoId.class)
@@ -53,6 +56,7 @@ public class KeyGenerator {
      */
     public static class NanoId implements IdentifierGenerator {
 
+        @Serial
         private static final long serialVersionUID = longId();
 
         @Override
@@ -68,6 +72,7 @@ public class KeyGenerator {
      */
     public static class LongId implements IdentifierGenerator {
 
+        @Serial
         private static final long serialVersionUID = longId();
 
         @Override

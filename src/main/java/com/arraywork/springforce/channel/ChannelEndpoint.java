@@ -1,7 +1,5 @@
 package com.arraywork.springforce.channel;
 
-import org.springframework.web.bind.annotation.RestController;
-
 import jakarta.annotation.Resource;
 import jakarta.websocket.CloseReason;
 import jakarta.websocket.OnClose;
@@ -12,10 +10,14 @@ import jakarta.websocket.PongMessage;
 import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+
+import org.springframework.web.bind.annotation.RestController;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * Channel Endpoint
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/07/06

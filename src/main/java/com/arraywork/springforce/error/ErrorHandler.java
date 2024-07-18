@@ -1,5 +1,9 @@
 package com.arraywork.springforce.error;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,12 +22,9 @@ import org.springframework.web.context.request.async.AsyncRequestNotUsableExcept
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.http.HttpServletRequest;
-
 /**
  * Unified Error Handler
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/01/25
@@ -39,7 +40,7 @@ public class ErrorHandler {
     // When dragging the progress bar of the output video stream, it is easy to
     // cause these exception and fall into an infinite loop, eventually causing the
     // system to crash. Ignoring them has not been found to have any impact.
-    @ExceptionHandler({ ClientAbortException.class, AsyncRequestNotUsableException.class })
+    @ExceptionHandler({ClientAbortException.class, AsyncRequestNotUsableException.class})
     public void handleClientAbort(ClientAbortException e) {
         // Ignore the ClientAbortException warning
         logger.warn("Ignored: {} - {}", request.getRequestURI(), e.getMessage());
@@ -60,11 +61,11 @@ public class ErrorHandler {
 
     // 400
     @ExceptionHandler({
-        HttpMessageNotReadableException.class,
-        HttpMessageNotWritableException.class,
-        MethodArgumentTypeMismatchException.class,
-        IllegalStateException.class,
-        IllegalArgumentException.class
+            HttpMessageNotReadableException.class,
+            HttpMessageNotWritableException.class,
+            MethodArgumentTypeMismatchException.class,
+            IllegalStateException.class,
+            IllegalArgumentException.class
     })
     public String handleBadRequest(Exception e) {
         return forwardError(HttpStatus.BAD_REQUEST, e);
@@ -79,8 +80,8 @@ public class ErrorHandler {
     // 404
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({
-        NoResourceFoundException.class,
-        EntityNotFoundException.class
+            NoResourceFoundException.class,
+            EntityNotFoundException.class
     })
     public String handleNotFoundException(Exception e) {
         return forwardError(HttpStatus.NOT_FOUND, "Resource not found");
@@ -94,8 +95,8 @@ public class ErrorHandler {
 
     // 415
     @ExceptionHandler({
-        HttpMediaTypeNotSupportedException.class,
-        HttpMediaTypeNotAcceptableException.class
+            HttpMediaTypeNotSupportedException.class,
+            HttpMediaTypeNotAcceptableException.class
     })
     public String handle(HttpMediaTypeNotSupportedException e) {
         return forwardError(HttpStatus.UNSUPPORTED_MEDIA_TYPE, e);

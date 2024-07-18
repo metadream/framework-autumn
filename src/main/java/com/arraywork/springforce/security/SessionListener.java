@@ -25,7 +25,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
     public void attributeAdded(HttpSessionBindingEvent be) {
         Object object = be.getValue();
 
-        if (object != null && object instanceof Principal) {
+        if (object instanceof Principal) {
             String username = ((Principal) object).getUsername();
             HttpSession session = be.getSession();
             ServletContext app = session.getServletContext();
@@ -50,7 +50,7 @@ public class SessionListener implements HttpSessionListener, HttpSessionAttribut
         Object object = session.getAttribute(session.getId());
 
         // Remove session by username key
-        if (object != null && object instanceof Principal) {
+        if (object instanceof Principal) {
             String username = ((Principal) object).getUsername();
             session.getServletContext().removeAttribute(username);
         }

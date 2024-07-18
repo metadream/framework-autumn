@@ -1,7 +1,8 @@
 package com.arraywork.springforce.security;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,11 +14,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.arraywork.springforce.util.Assert;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 /**
  * Security Interceptor
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/29
@@ -29,12 +28,10 @@ public class SecurityInterceptor implements HandlerInterceptor, WebMvcConfigurer
     private SecurityContext context;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-        throws IOException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
 
-        if (handler instanceof HandlerMethod) {
+        if (handler instanceof HandlerMethod handlerMethod) {
             // Get @Authority annotation in controller method
-            HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
             Authority authority = method.getAnnotation(Authority.class);
 

@@ -10,6 +10,7 @@ import lombok.Data;
 
 /**
  * Pagination Object extends framework
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/03/10
@@ -35,14 +36,11 @@ public class Pagination<T> {
         setContent(page.getContent());
     }
 
-    public List<Integer> getPageSet() {
-        return buildPageSet(totalPages, pageNumber, 2);
-    }
-
     /**
      * 生成带省略号（以0表示）的页码数组
-     * @param totalPages 总页数
-     * @param pageNumber 当前页码
+     *
+     * @param totalPages   总页数
+     * @param pageNumber   当前页码
      * @param aroundNumber 环绕当前页左右的页码数
      * @return
      */
@@ -78,6 +76,10 @@ public class Pagination<T> {
         pages.add(0);
         pages.add(totalPages);
         return pages;
+    }
+
+    public List<Integer> getPageSet() {
+        return buildPageSet(totalPages, pageNumber, 2);
     }
 
 }

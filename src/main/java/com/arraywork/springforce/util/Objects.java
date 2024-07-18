@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * Object Utilities
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/09

@@ -2,12 +2,14 @@ package com.arraywork.springforce.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
 /**
  * String Utilities
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/04/28
@@ -29,10 +31,10 @@ public class Strings {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             if (!StringUtils.hasText(entry.getValue())) continue;
-            if (sb.length() > 0) sb.append("&");
+            if (!sb.isEmpty()) sb.append("&");
             sb.append(String.format("%s=%s",
-                URLEncoder.encode(entry.getKey(), "UTF-8"),
-                URLEncoder.encode(entry.getValue(), "UTF-8")));
+                    URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8),
+                    URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8)));
         }
         return sb.toString();
     }

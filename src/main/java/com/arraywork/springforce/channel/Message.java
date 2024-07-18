@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Web Socket Message Entity
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/07/06

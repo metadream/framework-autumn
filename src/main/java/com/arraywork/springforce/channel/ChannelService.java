@@ -5,17 +5,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import jakarta.websocket.Session;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import jakarta.websocket.Session;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * Channel Service
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/07/06
@@ -74,11 +75,7 @@ public class ChannelService {
     // Get session set from specified channel
     // The keyword 'synchronized' is important
     private synchronized Set<Session> getChannel(String channel) {
-        Set<Session> sessions = channels.get(channel);
-        if (sessions == null) {
-            sessions = new CopyOnWriteArraySet<>();
-            channels.put(channel, sessions);
-        }
+        Set<Session> sessions = channels.computeIfAbsent(channel, k -> new CopyOnWriteArraySet<>());
         return sessions;
     }
 

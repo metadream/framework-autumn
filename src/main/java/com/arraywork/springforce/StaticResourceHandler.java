@@ -7,17 +7,17 @@ import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 /**
  * Static Resource Handler
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/04/29
@@ -27,7 +27,7 @@ public class StaticResourceHandler {
 
     private static final int DEFAULT_BUFFER_SIZE = 8192;
 
-    // Serve static resources reqeust
+    // Serve static resources request
     public void serve(Path path, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Resource resource = new FileSystemResource(path);
 
@@ -78,10 +78,8 @@ public class StaticResourceHandler {
 
         // Streaming resource bytes
         try (InputStream input = resource.getInputStream();
-            OutputStream output = response.getOutputStream()) {
+             OutputStream output = response.getOutputStream()) {
             copy(input, output, start);
-            input.close();
-            output.close();
         }
     }
 

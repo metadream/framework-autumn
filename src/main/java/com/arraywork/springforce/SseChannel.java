@@ -8,6 +8,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 /**
  * Server-Sent Event Service
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/04/28

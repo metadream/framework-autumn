@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Open Computer Vision Utils
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/07/10
@@ -32,6 +33,7 @@ public class OpenCv {
      * 根据路径加载OpenCv库（相对路径则从项目根目录查找）
      * Windows -> /path/to/opencv_java4100.dll
      * Linux -> /path/to/libopencv_java4100.so
+     *
      * @param libPath
      */
     public static void loadLibrary(String libPath) {
@@ -45,6 +47,7 @@ public class OpenCv {
     /**
      * 捕获视频并截取相同纵横比的缩略图
      * Windows下不支持中文路径
+     *
      * @param input
      * @param output
      * @param longSide 长边值
@@ -74,7 +77,7 @@ public class OpenCv {
             boolean success = Imgcodecs.imwrite(output, mat);
             Assert.isTrue(success, "Cannot write image to output: " + output);
         } catch (Exception e) {
-            log.error("Capture video failed: " + input, e);
+            log.error("Capture video failed: {}", input, e);
             throw new RuntimeException("Capture video failed: " + input);
         } finally {
             if (capture != null) {
@@ -94,10 +97,11 @@ public class OpenCv {
 
     /**
      * 按相同纵横比缩放图片
+     *
      * @param input
      * @param output
      * @param longSide 长边值
-     * @param quality 质量（0-100）
+     * @param quality  质量（0-100）
      * @return
      */
     private static void resizeImageNative(String input, String output, int longSide, int quality) {
@@ -112,7 +116,7 @@ public class OpenCv {
             boolean success = Imgcodecs.imwrite(output, dist, params);
             Assert.isTrue(success, "Cannot write image to output: " + output);
         } catch (Exception e) {
-            log.error("Resize image failed: " + input, e);
+            log.error("Resize image failed: {}", input, e);
             throw new RuntimeException("Resize image failed: " + input);
         }
     }
@@ -120,6 +124,7 @@ public class OpenCv {
     /**
      * 缩放图片（输入或输出路径中含有Unicode字符，例如在Windows中不支持中文路径）
      * 用Java读取文件的速度比原生opencv略慢
+     *
      * @param input
      * @param output
      * @param longSide
@@ -140,7 +145,7 @@ public class OpenCv {
             Imgcodecs.imencode(".jpg", dist, buff, params);
             Files.write(Path.of(output), buff.toArray());
         } catch (Exception e) {
-            log.error("Resize image failed: " + input, e);
+            log.error("Resize image failed: {}", input, e);
             throw new RuntimeException("Resize image failed: " + input);
         }
     }
@@ -161,8 +166,7 @@ public class OpenCv {
             if (width > height) {
                 width = longSide;
                 height = (int) (longSide / ratio);
-            }
-            else {
+            } else {
                 height = longSide;
                 width = (int) (longSide * ratio);
             }

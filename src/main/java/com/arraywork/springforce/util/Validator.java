@@ -2,12 +2,12 @@ package com.arraywork.springforce.util;
 
 import java.util.List;
 import java.util.Set;
-
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 
 /**
  * Validator Utilities
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/09
@@ -35,10 +35,13 @@ public class Validator {
      * Validation Group Interface for Entity Field
      * (with Spring's @Validated grouping verification)
      */
-    public interface Insert {}
+    public interface Insert {
+    }
 
-    public interface Update {}
+    public interface Update {
+    }
 
-    public interface Delete {}
+    public interface Delete {
+    }
 
 }

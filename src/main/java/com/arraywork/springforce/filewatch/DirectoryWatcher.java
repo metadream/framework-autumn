@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.springframework.boot.devtools.filewatch.ChangedFile;
 import org.springframework.boot.devtools.filewatch.ChangedFiles;
-import org.springframework.boot.devtools.filewatch.FileChangeListener;
 import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
 
 import com.arraywork.springforce.util.FileUtils;
@@ -17,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Directory Watcher
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/04/25
@@ -24,9 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DirectoryWatcher {
 
-    private Duration pollInterval;
-    private Duration quietPeriod;
-    private FileSystemListener listener;
+    private final Duration pollInterval;
+    private final Duration quietPeriod;
+    private final FileSystemListener listener;
     private FileSystemWatcher watcher;
 
     // Initialize the water parameters
@@ -43,28 +43,23 @@ public class DirectoryWatcher {
         File rootEntry = new File(rootDirectory);
         watcher = new FileSystemWatcher(true, pollInterval, quietPeriod);
         watcher.addSourceDirectory(rootEntry);
-        watcher.addListener(new FileChangeListener() {
+        watcher.addListener(changeSet -> {
 
-            @Override
-            public void onChange(Set<ChangedFiles> changeSet) {
+            for (ChangedFiles files : changeSet) {
+                Set<ChangedFile> changedFiles = files.getFiles();
+                int count = 0, total = changedFiles.size();
 
-                for (ChangedFiles files : changeSet) {
-                    Set<ChangedFile> changedFiles = files.getFiles();
-                    int count = 0, total = changedFiles.size();
+                for (ChangedFile changedFile : changedFiles) {
+                    count++;
+                    File file = changedFile.getFile();
 
-                    for (ChangedFile changedFile : changedFiles) {
-                        count++;
-                        File file = changedFile.getFile();
-
-                        switch (changedFile.getType()) {
-                            case ADD -> listener.onAdded(file, count, total);
-                            case MODIFY -> listener.onModified(file, count, total);
-                            case DELETE -> listener.onDeleted(file, count, total);
-                        }
+                    switch (changedFile.getType()) {
+                        case ADD -> listener.onAdded(file, count, total);
+                        case MODIFY -> listener.onModified(file, count, total);
+                        case DELETE -> listener.onDeleted(file, count, total);
                     }
                 }
             }
-
         });
 
         watcher.start();

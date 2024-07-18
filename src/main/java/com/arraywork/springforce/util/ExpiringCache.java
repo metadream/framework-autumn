@@ -8,8 +8,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Component;
 
+import lombok.Getter;
+
 /**
  * Expiring Cache
+ *
  * @author ChatGPT 3.5
  * @copyright ArrayWork Inc.
  * @since 2024/02/20
@@ -39,7 +42,7 @@ public class ExpiringCache<K, V> {
 
         CacheEntry<V> entry = cache.get(key);
         if (entry != null && !entry.isExpired()) {
-            return entry.getValue();
+            return entry.value();
         }
         cache.remove(key);
         return null;
@@ -60,19 +63,7 @@ public class ExpiringCache<K, V> {
     }
 
     // Cache Entry with Expiration Time
-    private static class CacheEntry<T> {
-
-        private final T value;
-        private final long expirationTime;
-
-        public CacheEntry(T value, long expirationTime) {
-            this.value = value;
-            this.expirationTime = expirationTime;
-        }
-
-        public T getValue() {
-            return value;
-        }
+    private record CacheEntry<T>(@Getter T value, long expirationTime) {
 
         public boolean isExpired() {
             return isExpired(System.currentTimeMillis());

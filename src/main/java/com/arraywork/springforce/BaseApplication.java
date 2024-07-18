@@ -20,7 +20,8 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 /**
- * SringBoot Base Application
+ * SpringBoot Base Application
+ *
  * @author AiChen
  * @copyright ArrayWork Inc.
  * @since 2024/02/05

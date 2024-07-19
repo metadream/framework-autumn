@@ -11,9 +11,11 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public interface GenericEnum<T> {
 
-    // Use the corresponding value of @JsonValue when passing parameters and
-    // returning, overriding the original default implementation of deserialization
-    // from literals back to enumerations
+    /**
+     * Use the corresponding value of @JsonValue when passing parameters and
+     * returning, overriding the original default implementation of deserialization
+     * from literals back to enumerations
+     */
     @JsonValue
     T getCode();
 

@@ -42,7 +42,7 @@ public class BCryptEncoder {
 
     /**
      * @param version the version of bcrypt, can be 2a,2b,2y
-     * @param random the secure random instance to use
+     * @param random  the secure random instance to use
      */
     public BCryptEncoder(BCryptVersion version, SecureRandom random) {
         this(version, -1, random);
@@ -50,14 +50,14 @@ public class BCryptEncoder {
 
     /**
      * @param strength the log rounds to use, between 4 and 31
-     * @param random the secure random instance to use
+     * @param random   the secure random instance to use
      */
     public BCryptEncoder(int strength, SecureRandom random) {
         this(BCryptVersion.$2A, strength, random);
     }
 
     /**
-     * @param version the version of bcrypt, can be 2a,2b,2y
+     * @param version  the version of bcrypt, can be 2a,2b,2y
      * @param strength the log rounds to use, between 4 and 31
      */
     public BCryptEncoder(BCryptVersion version, int strength) {
@@ -65,9 +65,9 @@ public class BCryptEncoder {
     }
 
     /**
-     * @param version the version of bcrypt, can be 2a,2b,2y
+     * @param version  the version of bcrypt, can be 2a,2b,2y
      * @param strength the log rounds to use, between 4 and 31
-     * @param random the secure random instance to use
+     * @param random   the secure random instance to use
      */
     public BCryptEncoder(BCryptVersion version, int strength, SecureRandom random) {
         if (strength != -1 && (strength < BCrypt.MIN_LOG_ROUNDS || strength > BCrypt.MAX_LOG_ROUNDS)) {
@@ -84,13 +84,6 @@ public class BCryptEncoder {
         }
         String salt = getSalt();
         return BCrypt.hashpw(rawPassword.toString(), salt);
-    }
-
-    private String getSalt() {
-        if (this.random != null) {
-            return BCrypt.gensalt(this.version.getVersion(), this.strength, this.random);
-        }
-        return BCrypt.gensalt(this.version.getVersion(), this.strength);
     }
 
     public boolean matches(CharSequence rawPassword, String encodedPassword) {
@@ -118,8 +111,16 @@ public class BCryptEncoder {
         return strength < this.strength;
     }
 
+    private String getSalt() {
+        if (this.random != null) {
+            return BCrypt.gensalt(this.version.getVersion(), this.strength, this.random);
+        }
+        return BCrypt.gensalt(this.version.getVersion(), this.strength);
+    }
+
     /**
      * Stores the default bcrypt version for use in configuration.
+     *
      * @author Lin Feng
      */
     public enum BCryptVersion {

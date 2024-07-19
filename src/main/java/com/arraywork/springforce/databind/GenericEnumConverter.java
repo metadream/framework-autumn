@@ -16,7 +16,7 @@ import org.springframework.core.convert.converter.ConverterFactory;
  * @since 2024/02/26
  */
 public class GenericEnumConverter<X extends GenericEnum<Y>, Y>
-        implements AttributeConverter<X, Y>, ConverterFactory<String, GenericEnum<?>> {
+    implements AttributeConverter<X, Y>, ConverterFactory<String, GenericEnum<?>> {
 
     // Implement the ConverterFactory method to convert the code in the 'GET'
     // request into an enumeration type
@@ -47,7 +47,7 @@ public class GenericEnumConverter<X extends GenericEnum<Y>, Y>
     // Convert the object (usually basic types such as integer and string) to
     // generic enumeration
     private record StringToEnumConverter<T extends GenericEnum<?>>(
-            Class<T> targetType) implements Converter<String, T> {
+        Class<T> targetType) implements Converter<String, T> {
 
         @Override
         public T convert(String source) {

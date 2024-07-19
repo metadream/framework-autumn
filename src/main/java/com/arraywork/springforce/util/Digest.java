@@ -1,6 +1,5 @@
 package com.arraywork.springforce.util;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -19,7 +18,7 @@ import org.springframework.util.DigestUtils;
 public class Digest {
 
     // Signature for API request parameters
-    public static String signature(Map<String, String> params) throws UnsupportedEncodingException {
+    public static String signature(Map<String, String> params) {
         // Step 1. Sort the parameters by ASCII code
         Map<String, String> treeMap = new TreeMap<>(params);
         // Step 2. Convert the parameters to query string

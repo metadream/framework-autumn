@@ -48,8 +48,8 @@ public class OpenCv {
      * 捕获视频并截取相同纵横比的缩略图
      * Windows下不支持中文路径
      *
-     * @param input 输入文件路径
-     * @param output 输出文件路径
+     * @param input    输入文件路径
+     * @param output   输出文件路径
      * @param longSide 长边值
      */
     public static void captureVideo(String input, String output, int longSide) {
@@ -97,8 +97,8 @@ public class OpenCv {
     /**
      * 按相同纵横比缩放图片
      *
-     * @param input 输入文件路径
-     * @param output 输出文件路径
+     * @param input    输入文件路径
+     * @param output   输出文件路径
      * @param longSide 长边值
      * @param quality  质量（0-100）
      */
@@ -123,10 +123,10 @@ public class OpenCv {
      * 缩放图片（输入或输出路径中含有Unicode字符，例如在Windows中不支持中文路径）
      * 用Java读取文件的速度比原生opencv略慢
      *
-     * @param input 输入文件路径
-     * @param output 输出文件路径
+     * @param input    输入文件路径
+     * @param output   输出文件路径
      * @param longSide 长边值
-     * @param quality 输出质量
+     * @param quality  输出质量
      */
     private static void resizeImageUnicode(String input, String output, int longSide, int quality) {
         checkPath(input, output);

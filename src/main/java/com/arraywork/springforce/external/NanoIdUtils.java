@@ -34,31 +34,29 @@ import java.util.Random;
 public final class NanoIdUtils {
 
     /**
+     * The default random number generator used by this class.
+     * Creates cryptographically strong NanoId Strings.
+     */
+    public static final SecureRandom DEFAULT_NUMBER_GENERATOR = new SecureRandom();
+    /**
+     * The default alphabet used by this class.
+     * Creates url-friendly NanoId Strings using 64 unique symbols.
+     */
+    public static final char[] DEFAULT_ALPHABET = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        .toCharArray();
+    /**
+     * The default size used by this class.
+     * Creates NanoId Strings with slightly more unique values than UUID v4.
+     */
+    public static final int DEFAULT_SIZE = 21;
+
+    /**
      * <code>NanoIdUtils</code> instances should NOT be constructed in standard programming.
      * Instead, the class should be used as <code>NanoIdUtils.randomNanoId();</code>.
      */
     private NanoIdUtils() {
         // Do Nothing
     }
-
-    /**
-     * The default random number generator used by this class.
-     * Creates cryptographically strong NanoId Strings.
-     */
-    public static final SecureRandom DEFAULT_NUMBER_GENERATOR = new SecureRandom();
-
-    /**
-     * The default alphabet used by this class.
-     * Creates url-friendly NanoId Strings using 64 unique symbols.
-     */
-    public static final char[] DEFAULT_ALPHABET = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            .toCharArray();
-
-    /**
-     * The default size used by this class.
-     * Creates NanoId Strings with slightly more unique values than UUID v4.
-     */
-    public static final int DEFAULT_SIZE = 21;
 
     /**
      * Static factory to retrieve a url-friendly, pseudo randomly generated, NanoId String.

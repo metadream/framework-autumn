@@ -32,8 +32,8 @@ public class Strings {
             if (!StringUtils.hasText(entry.getValue())) continue;
             if (!sb.isEmpty()) sb.append("&");
             sb.append(String.format("%s=%s",
-                    URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8),
-                    URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8)));
+                URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8),
+                URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8)));
         }
         return sb.toString();
     }

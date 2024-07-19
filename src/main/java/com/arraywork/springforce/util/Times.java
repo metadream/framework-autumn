@@ -58,7 +58,7 @@ public class Times {
         long m = (seconds % 3600) / 60;
         long s = seconds % 60;
         return ((d > 0 ? d + "d " : "") + (h > 0 ? h + "h " : "") + (m > 0 ? m + "m " : "")
-                + (s > 0 ? s + "s" : "")).trim();
+            + (s > 0 ? s + "s" : "")).trim();
     }
 
 }

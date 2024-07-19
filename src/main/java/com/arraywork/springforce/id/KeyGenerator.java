@@ -48,11 +48,11 @@ public class KeyGenerator {
 
     /**
      * NanoID Generator Class for JPA
-     *
-     * @Id
-     * @Column(length = 24, insertable = false, updatable = false)
-     * @GenericGenerator(name = "nano-id-generator", type = KeyGenerator.NanoId.class)
-     * @GeneratedValue(generator = "nano-id-generator")
+     * Examples:
+     * - @Id
+     * - @Column(length = 24, insertable = false, updatable = false)
+     * - @GenericGenerator(name = "nano-id-generator", type = KeyGenerator.NanoId.class)
+     * - @GeneratedValue(generator = "nano-id-generator")
      */
     public static class NanoId implements IdentifierGenerator {
 

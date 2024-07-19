@@ -17,5 +17,4 @@ import org.hibernate.annotations.IdGeneratorType;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @IdGeneratorType(KeyGenerator.LongId.class)
-public @interface LongIdGeneration {
-}
+public @interface LongIdGeneration {}

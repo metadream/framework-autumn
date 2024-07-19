@@ -8,7 +8,5 @@ package com.arraywork.springforce.security;
  * @since 2024/02/28
  */
 public interface SecurityService {
-
     Principal login(String username, String rawPassword);
-
 }

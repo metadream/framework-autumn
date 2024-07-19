@@ -1,6 +1,5 @@
 package com.arraywork.springforce.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -27,7 +26,7 @@ public class Strings {
     }
 
     // Build query string from a map (ignores null and empty value)
-    public static String buildQueryString(Map<String, String> params) throws UnsupportedEncodingException {
+    public static String buildQueryString(Map<String, String> params) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             if (!StringUtils.hasText(entry.getValue())) continue;

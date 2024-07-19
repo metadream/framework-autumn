@@ -41,7 +41,6 @@ public class LocaleConfig implements WebMvcConfigurer {
      *   spring.messages.basename = i18n/messages
      *   spring.messages.fallbackToSystemLocale = false
      * <pre>
-     * @return
      */
     @Bean
     public ResourceBundleMessageSource messageSource() {

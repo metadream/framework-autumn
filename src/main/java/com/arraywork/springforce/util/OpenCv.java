@@ -34,7 +34,7 @@ public class OpenCv {
      * Windows -> /path/to/opencv_java4100.dll
      * Linux -> /path/to/libopencv_java4100.so
      *
-     * @param libPath
+     * @param libPath OpenCv库路径
      */
     public static void loadLibrary(String libPath) {
         if (!Path.of(libPath).isAbsolute()) {
@@ -48,10 +48,9 @@ public class OpenCv {
      * 捕获视频并截取相同纵横比的缩略图
      * Windows下不支持中文路径
      *
-     * @param input
-     * @param output
+     * @param input 输入文件路径
+     * @param output 输出文件路径
      * @param longSide 长边值
-     * @return
      */
     public static void captureVideo(String input, String output, int longSide) {
         checkPath(input, output);
@@ -98,11 +97,10 @@ public class OpenCv {
     /**
      * 按相同纵横比缩放图片
      *
-     * @param input
-     * @param output
+     * @param input 输入文件路径
+     * @param output 输出文件路径
      * @param longSide 长边值
      * @param quality  质量（0-100）
-     * @return
      */
     private static void resizeImageNative(String input, String output, int longSide, int quality) {
         checkPath(input, output);
@@ -125,10 +123,10 @@ public class OpenCv {
      * 缩放图片（输入或输出路径中含有Unicode字符，例如在Windows中不支持中文路径）
      * 用Java读取文件的速度比原生opencv略慢
      *
-     * @param input
-     * @param output
-     * @param longSide
-     * @param quality
+     * @param input 输入文件路径
+     * @param output 输出文件路径
+     * @param longSide 长边值
+     * @param quality 输出质量
      */
     private static void resizeImageUnicode(String input, String output, int longSide, int quality) {
         checkPath(input, output);

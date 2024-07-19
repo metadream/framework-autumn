@@ -75,8 +75,7 @@ public class ChannelService {
     // Get session set from specified channel
     // The keyword 'synchronized' is important
     private synchronized Set<Session> getChannel(String channel) {
-        Set<Session> sessions = channels.computeIfAbsent(channel, k -> new CopyOnWriteArraySet<>());
-        return sessions;
+        return channels.computeIfAbsent(channel, k -> new CopyOnWriteArraySet<>());
     }
 
 }

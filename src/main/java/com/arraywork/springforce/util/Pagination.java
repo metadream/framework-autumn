@@ -42,7 +42,7 @@ public class Pagination<T> {
      * @param totalPages   总页数
      * @param pageNumber   当前页码
      * @param aroundNumber 环绕当前页左右的页码数
-     * @return
+     * @return 包含整数页码的数组（0表示省略号）
      */
     public static List<Integer> buildPageSet(int totalPages, int pageNumber, int aroundNumber) {
         int baseCount = aroundNumber * 2 + 5; // 总元素个数：环绕左右页码*2+当前页+省略号*2+首页+末页

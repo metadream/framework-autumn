@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class BCryptEncoder {
 
-    private Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2(a|y|b)?\\$(\\d\\d)\\$[./0-9A-Za-z]{53}");
+    private final Pattern BCRYPT_PATTERN = Pattern.compile("\\A\\$2(a|y|b)?\\$(\\d\\d)\\$[./0-9A-Za-z]{53}");
 
     private final int strength;
     private final BCryptVersion version;
@@ -97,7 +97,7 @@ public class BCryptEncoder {
         if (rawPassword == null) {
             throw new IllegalArgumentException("rawPassword cannot be null");
         }
-        if (encodedPassword == null || encodedPassword.length() == 0) {
+        if (encodedPassword == null || encodedPassword.isEmpty()) {
             return false;
         }
         if (!this.BCRYPT_PATTERN.matcher(encodedPassword).matches()) {
@@ -107,7 +107,7 @@ public class BCryptEncoder {
     }
 
     public boolean upgradeEncoding(String encodedPassword) {
-        if (encodedPassword == null || encodedPassword.length() == 0) {
+        if (encodedPassword == null || encodedPassword.isEmpty()) {
             return false;
         }
         Matcher matcher = this.BCRYPT_PATTERN.matcher(encodedPassword);

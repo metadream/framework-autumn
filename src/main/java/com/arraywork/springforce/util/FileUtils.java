@@ -41,11 +41,13 @@ public class FileUtils {
     // Walk directory and add files to argument List<File>
     public static void walk(File dir, List<File> files) {
         File[] entries = dir.listFiles();
-        for (File entry : entries) {
-            if (entry.isFile()) {
-                files.add(entry);
-            } else if (entry.isDirectory()) {
-                walk(entry, files);
+        if (entries != null) {
+            for (File entry : entries) {
+                if (entry.isFile()) {
+                    files.add(entry);
+                } else if (entry.isDirectory()) {
+                    walk(entry, files);
+                }
             }
         }
     }

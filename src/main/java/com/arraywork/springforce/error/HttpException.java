@@ -3,6 +3,7 @@ package com.arraywork.springforce.error;
 import java.io.Serial;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
 import lombok.Getter;
 
@@ -33,6 +34,11 @@ public class HttpException extends RuntimeException {
     public HttpException(HttpStatus status, String message) {
         super(message);
         this.status = status;
+    }
+
+    public HttpException(HttpStatusCode statusCode, String message) {
+        super(message);
+        this.status = HttpStatus.valueOf(statusCode.value());
     }
 
 }

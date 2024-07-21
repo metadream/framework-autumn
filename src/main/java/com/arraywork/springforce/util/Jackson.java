@@ -89,10 +89,14 @@ public class Jackson {
         }
     }
 
-    // Convert an object to a Map
+    // Convert an object to Map
     public Map<String, Object> convertToMap(Object object) {
-        return mapper.convertValue(object, new TypeReference<>() {
-        });
+        return mapper.convertValue(object, new TypeReference<>() {});
+    }
+
+    // Convert an object to Entity
+    public <T> T convertToEntity(Object object, Class<T> type) {
+        return mapper.convertValue(object, type);
     }
 
 }

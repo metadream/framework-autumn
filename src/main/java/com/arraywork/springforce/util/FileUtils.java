@@ -31,6 +31,13 @@ public class FileUtils {
         return i > -1 ? filename.substring(i) : "";
     }
 
+    // Format file size in human readable
+    public static String formatSize(long v) {
+        if (v < 1024) return v + " B";
+        int z = (63 - Long.numberOfLeadingZeros(v)) / 10;
+        return String.format("%.1f %siB", (double) v / (1L << (z * 10)), " KMGTPE".charAt(z));
+    }
+
     // Walk directory and add files to argument List<File>
     public static void walk(File dir, List<File> files) {
         File[] entries = dir.listFiles();

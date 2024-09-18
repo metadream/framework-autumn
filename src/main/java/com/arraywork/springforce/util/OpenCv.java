@@ -55,6 +55,7 @@ public class OpenCv {
     public static void captureVideo(String input, String output, int longSide) {
         checkPath(input, output);
         VideoCapture capture = null;
+        Mat mat = null;
         try {
             capture = new VideoCapture(input);
             Assert.isTrue(capture.isOpened(), "Cannot open the video: " + input);
@@ -68,7 +69,7 @@ public class OpenCv {
             int frames = (int) capture.get(Videoio.CAP_PROP_FRAME_COUNT);
             capture.set(Videoio.CAP_PROP_POS_FRAMES, frames / 2);
 
-            Mat mat = new Mat();
+            mat = new Mat();
             Assert.isTrue(capture.read(mat), "Cannot read the video: " + input);
 
             Size size = calcSize(mat.width(), mat.height(), longSide);
@@ -79,9 +80,8 @@ public class OpenCv {
             log.error("Capture video failed: {}", input, e);
             throw new RuntimeException("Capture video failed: " + input);
         } finally {
-            if (capture != null) {
-                capture.release();
-            }
+            if (capture != null) capture.release();
+            if (mat != null) mat.release();
         }
     }
 
@@ -104,9 +104,10 @@ public class OpenCv {
      */
     private static void resizeImageNative(String input, String output, int longSide, int quality) {
         checkPath(input, output);
+        Mat src = null, dist = null;
         try {
-            Mat src = Imgcodecs.imread(input);
-            Mat dist = new Mat();
+            src = Imgcodecs.imread(input);
+            dist = new Mat();
             Size size = calcSize(src.width(), src.height(), longSide);
             Imgproc.resize(src, dist, size, 0, 0, Imgproc.INTER_AREA);
             MatOfInt params = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, quality);
@@ -116,6 +117,9 @@ public class OpenCv {
         } catch (Exception e) {
             log.error("Resize image failed: {}", input, e);
             throw new RuntimeException("Resize image failed: " + input);
+        } finally {
+            if (src != null) src.release();
+            if (dist != null) dist.release();
         }
     }
 
@@ -130,11 +134,12 @@ public class OpenCv {
      */
     private static void resizeImageUnicode(String input, String output, int longSide, int quality) {
         checkPath(input, output);
+        Mat src = null, dist = null;
         try {
             byte[] bytes = Files.readAllBytes(Path.of(input));
-            Mat src = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.IMREAD_UNCHANGED);
+            src = Imgcodecs.imdecode(new MatOfByte(bytes), Imgcodecs.IMREAD_UNCHANGED);
 
-            Mat dist = new Mat();
+            dist = new Mat();
             Size size = calcSize(src.width(), src.height(), longSide);
             Imgproc.resize(src, dist, size, 0, 0, Imgproc.INTER_AREA);
             MatOfInt params = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, quality);
@@ -145,6 +150,9 @@ public class OpenCv {
         } catch (Exception e) {
             log.error("Resize image failed: {}", input, e);
             throw new RuntimeException("Resize image failed: " + input);
+        } finally {
+            if (src != null) src.release();
+            if (dist != null) dist.release();
         }
     }
 

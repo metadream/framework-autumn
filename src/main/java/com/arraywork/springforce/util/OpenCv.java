@@ -45,6 +45,19 @@ public class OpenCv {
     }
 
     /**
+     * 获取图片的宽高像素
+     *
+     * @param input
+     * @return { width, height }
+     */
+    public static int[] getShape(String input) {
+        Mat mat = Imgcodecs.imread(input);
+        int[] shape = { mat.cols(), mat.rows() };
+        mat.release();
+        return shape;
+    }
+
+    /**
      * 捕获视频并截取相同纵横比的缩略图
      * Windows下不支持中文路径
      *

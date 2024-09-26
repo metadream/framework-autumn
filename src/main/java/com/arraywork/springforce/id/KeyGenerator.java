@@ -22,8 +22,9 @@ public class KeyGenerator {
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     // NanoID: 24 characters base62 default
+    // The first character is a letter to apply to DOM id
     public static String nanoId() {
-        return nanoId(24);
+        return nanoId(1, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") + nanoId(23);
     }
 
     // NanoID: specify characters length

@@ -24,7 +24,7 @@ public class Pagination<T> {
     private boolean hasPrevious;
     private boolean hasNext;
     private boolean hasContent;
-    private List<T> content;
+    private Object content;
 
     public Pagination(Page<T> page) {
         setTotalRecords(page.getTotalElements());

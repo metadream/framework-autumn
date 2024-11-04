@@ -25,7 +25,7 @@ public class QrCodeUtils {
     public static BufferedImage createImage(String content) throws WriterException {
         Map<EncodeHintType, Object> hints = new HashMap();
         // ErrorCorrectionLevel：L = 7% (default), M = 15%, Q = 25%, H = 30%
-        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         hints.put(EncodeHintType.MARGIN, 1);
         hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 

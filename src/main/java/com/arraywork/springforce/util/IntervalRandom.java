@@ -11,7 +11,8 @@ import org.springframework.util.Assert;
  * Generate random numbers within a given interval
  *
  * @author AiChen
- * @created 2024/11/05
+ * @copyright ArrayWork Inc.
+ * @since 2024/11/05
  */
 public class IntervalRandom {
 

@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class SecurityAttribute {
 
     @Autowired
-    private SecurityContext context;
+    private SecuritySession session;
 
     // example: <div th:if="${principal}" th:text="${principal.username}"></div>
     @ModelAttribute("principal")
     public Principal principal() {
-        return context.getPrincipal();
+        return session.getPrincipal();
     }
 
 }

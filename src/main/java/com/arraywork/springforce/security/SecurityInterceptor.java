@@ -1,6 +1,7 @@
 package com.arraywork.springforce.security;
 
 import java.lang.reflect.Method;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -25,7 +26,7 @@ import com.arraywork.springforce.util.Assert;
 public class SecurityInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 
     @Autowired
-    private SecurityContext context;
+    private SecuritySession session;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -38,7 +39,7 @@ public class SecurityInterceptor implements HandlerInterceptor, WebMvcConfigurer
             // Annotation exists?
             if (authority != null) {
                 // Is logged in?
-                Principal principal = context.getPrincipal();
+                Principal principal = session.getPrincipal();
                 Assert.notNull(principal, HttpStatus.UNAUTHORIZED);
 
                 // Has any role?

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SecurityController {
 
     @Autowired
-    private SecurityContext context;
+    private SecuritySession session;
     @Autowired(required = false)
     private SecurityService service;
 
@@ -35,14 +35,13 @@ public class SecurityController {
     public Principal login(@RequestBody Map<String, String> map) {
         Principal principal = service.login(map.get("username"), map.get("password"));
         principal.setPassword("***");
-        context.authorize(principal);
-        return principal;
+        return session.addPrincipal(principal);
     }
 
     // Logout action
     @GetMapping("/logout")
     public String logout() {
-        context.destory();
+        session.destory();
         return "redirect:/";
     }
 

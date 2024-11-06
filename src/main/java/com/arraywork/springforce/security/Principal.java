@@ -18,6 +18,7 @@ public abstract class Principal {
 
     private String id;
     private String username;
+    private String nickname;
     private String password;
 
     public abstract List<SecurityRole> getSecurityRoles();

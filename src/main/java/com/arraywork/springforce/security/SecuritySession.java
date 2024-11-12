@@ -35,12 +35,6 @@ public class SecuritySession {
         return principal;
     }
 
-    // Add principal to specified session
-    public Principal addPrincipal(HttpSession session, Principal principal) {
-        session.setAttribute(session.getId(), principal);
-        return principal;
-    }
-
     // Destory current session and principal
     public void destory() {
         session.invalidate();

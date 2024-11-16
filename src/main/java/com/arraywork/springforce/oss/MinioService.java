@@ -20,8 +20,8 @@ import io.minio.UploadObjectArgs;
  * Compatible with Amazon S3 (Includes Cloudflare R2)
  *
  * minio.endpoint = https://cdn.arraywork.com
- * minio.accessKey = uBv1gBVhlAbovx3mSBox
- * minio.secretKey = yWxTHcw6mOeuOhZaBwMk4Sn9Hc3goVAp284loSHE
+ * minio.accessKey = xxxxxxxxxxxxxxxx
+ * minio.secretKey = yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
  * minio.bucket = photo
  *
  * @author AiChen

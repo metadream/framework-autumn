@@ -3,6 +3,8 @@ package com.arraywork.springforce.util;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Numbers Utilities
@@ -79,6 +81,32 @@ public class Numbers {
         if (bytes >= K) return df.format(1.0 * bytes / K) + " K" + unit + "B";
         if (bytes > 0) return df.format(bytes) + " B";
         return "0";
+    }
+
+    /**
+     * Determine whether the value is within the interval
+     *
+     * @param value     The value to be determined
+     * @param intervals Mathematical interval
+     * @return
+     */
+    public static boolean inIntervals(BigDecimal value, String intervals) {
+        Pattern pattern = Pattern.compile("^\\s*(?<leftSymbol>(\\(|\\[))\\s*(?<minValue>[-+]?\\d+(\\.\\d+)?)\\s*,\\s*(?<maxValue>[-+]?\\d+(\\.\\d+)?)\\s*(?<rightSymbol>(\\)|\\]))");
+        Matcher matcher = pattern.matcher(intervals);
+        Assert.isTrue(matcher.find(), "Not a valid interval definition: " + intervals);
+
+        BigDecimal minValue = new BigDecimal(matcher.group("minValue"));
+        BigDecimal maxValue = new BigDecimal(matcher.group("maxValue"));
+        Assert.isTrue(minValue.compareTo(maxValue) <= 0, "The left value of the interval cannot be greater than the right value: " + (minValue + " > " + maxValue));
+
+        String leftSymbol = matcher.group("leftSymbol");
+        String rightSymbol = matcher.group("rightSymbol");
+        // Determine the opening and closing interval
+        if (("(".equals(leftSymbol) && value.compareTo(minValue) <= 0) || (")".equals(rightSymbol) && value.compareTo(maxValue) >= 0)
+            || ("[".equals(leftSymbol) && value.compareTo(minValue) < 0) || ("]".equals(rightSymbol) && value.compareTo(maxValue) > 0)) {
+            return false;
+        }
+        return true;
     }
 
 }

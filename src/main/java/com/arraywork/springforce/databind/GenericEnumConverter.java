@@ -50,10 +50,10 @@ public class GenericEnumConverter<X extends GenericEnum<Y>, Y>
         Class<T> targetType) implements Converter<String, T> {
 
         @Override
-        public T convert(String source) {
+        public T convert(String code) {
             T[] enums = targetType.getEnumConstants();
             for (T e : enums) {
-                if (source.equals(String.valueOf(e.getCode()))) return e;
+                if (code.equals(String.valueOf(e.getCode()))) return e;
             }
             return null;
         }

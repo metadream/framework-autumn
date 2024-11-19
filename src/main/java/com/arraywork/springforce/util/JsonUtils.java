@@ -7,8 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import com.arraywork.springforce.databind.GenericEnum;
-import com.arraywork.springforce.databind.GenericEnumDeserializer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -42,7 +40,6 @@ public class JsonUtils {
         javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(df));
         javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(dtf));
         javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(df));
-        javaTimeModule.addDeserializer(GenericEnum.class, new GenericEnumDeserializer());
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.registerModule(javaTimeModule);

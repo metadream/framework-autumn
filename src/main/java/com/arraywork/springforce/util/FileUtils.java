@@ -11,8 +11,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.core.io.InputStreamSource;
-
 /**
  * Directory and File Utilities
  *
@@ -78,9 +76,8 @@ public class FileUtils {
     }
 
     /** Determine input stream is image format or not */
-    public static boolean isImageFormat(InputStreamSource source) throws IOException {
+    public static boolean isImageFormat(InputStream inputStream) throws IOException {
         byte[] header = new byte[4];
-        InputStream inputStream = source.getInputStream();
         int read = inputStream.read(header);
         inputStream.close();
 

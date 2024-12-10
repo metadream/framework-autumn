@@ -2,9 +2,14 @@ package com.arraywork.springforce.util;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.http.HttpHeaders;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerMapping;
 
 /**
@@ -16,14 +21,56 @@ import org.springframework.web.servlet.HandlerMapping;
  */
 public class HttpUtils {
 
-    // Get wildcard parameter
+    /** Get wildcard parameter */
     public static String getWildcard(HttpServletRequest request) {
         String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         String pattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
         return path.replace(pattern.replace("/**", ""), "");
     }
 
-    // Determine address is internal or not
+    /** Is mobile agent */
+    public static boolean isMobileAgent(HttpServletRequest request) {
+        String userAgent = request.getHeader(HttpHeaders.USER_AGENT);
+        if (userAgent != null) {
+            String mobileAgents = "Android|iPhone|iPad|iPod|Windows Phone|blackberry|ucweb";
+            Pattern pattern = Pattern.compile(".*(" + mobileAgents + ").*", Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(userAgent);
+            return matcher.matches();
+        }
+        return false;
+    }
+
+    /** Create cookie */
+    public static Cookie createCookie(String name, String value, int maxAge) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setMaxAge(maxAge);
+        return cookie;
+    }
+
+    /** Get cookie */
+    public static Cookie getCookie(HttpServletRequest request, String name) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null && StringUtils.hasText(name)) {
+            for (Cookie cookie : cookies) {
+                if (name.equals(cookie.getName())) {
+                    return cookie;
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Delete cookie */
+    public static Cookie deleteCookie(HttpServletRequest request, String name) {
+        Cookie cookie = getCookie(request, name);
+        if (cookie != null) {
+            cookie.setValue(null);
+            cookie.setMaxAge(0);
+        }
+        return cookie;
+    }
+
+    /** Determine address is internal or not */
     public static boolean isInternalAddr(String addr) {
         if (!Strings.isBlank(addr)) {
             if ("127.0.0.1".equals(addr) || "localhost".equals(addr)) return true;
@@ -36,13 +83,13 @@ public class HttpUtils {
                 // Class B 172.16.0.0-172.31.255.255
                 if (s1 == 172 && (s2 >= 16 || s2 <= 31)) return true;
                 // Class C 192.168.0.0-192.168.255.255
-                if (s1 == 192 && s2 == 168) return true;
+                return s1 == 192 && s2 == 168;
             }
         }
         return false;
     }
 
-    // Get client request ip address
+    /** Get client request ip address */
     public String getIpAddress(HttpServletRequest request) {
         final String[] IP_HEADER_CANDIDATES = {
             "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP",

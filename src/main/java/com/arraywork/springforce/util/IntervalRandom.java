@@ -16,7 +16,7 @@ import org.springframework.util.Assert;
  */
 public class IntervalRandom {
 
-    private static Random random = ThreadLocalRandom.current();
+    private static final Random random = ThreadLocalRandom.current();
 
     /**
      * Generate a random number in a given interval

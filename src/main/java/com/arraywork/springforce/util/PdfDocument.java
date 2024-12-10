@@ -32,20 +32,20 @@ public class PdfDocument extends Document {
 
     // 字体
     public static String fontSrc = "static/assets/Ali-PuHuiTi.ttf";
-    private Font titleFont;
-    private Font subtitleFont;
-    private Font headingFont;
-    private Font fieldFont;
-    private Font textFont;
+    private final Font titleFont;
+    private final Font subtitleFont;
+    private final Font headingFont;
+    private final Font fieldFont;
+    private final Font textFont;
 
     // 颜色
-    private BaseColor accentColor = new BaseColor(250, 80, 80);
-    private BaseColor textColor = new BaseColor(100, 100, 100);
-    private BaseColor borderColor = new BaseColor(235, 235, 235);
-    private BaseColor bgColor = new BaseColor(240, 240, 240);
-    private BaseFont baseFont;
+    private final BaseColor accentColor = new BaseColor(250, 80, 80);
+    private final BaseColor textColor = new BaseColor(100, 100, 100);
+    private final BaseColor borderColor = new BaseColor(235, 235, 235);
+    private final BaseColor bgColor = new BaseColor(240, 240, 240);
+    private final BaseFont baseFont;
 
-    private PdfWriter writer;
+    private final PdfWriter writer;
 
     /** 构造方法 */
     public PdfDocument(Rectangle pageSize, OutputStream outputStream) throws DocumentException, IOException {
@@ -176,7 +176,7 @@ public class PdfDocument extends Document {
      */
     class PdfWatermarkEvent implements PdfPageEvent {
 
-        private String watermark;
+        private final String watermark;
 
         public PdfWatermarkEvent(String watermark) {
             this.watermark = watermark;

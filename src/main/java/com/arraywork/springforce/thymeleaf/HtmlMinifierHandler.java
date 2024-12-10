@@ -60,8 +60,8 @@ public class HtmlMinifierHandler extends AbstractTemplateHandler {
      */
     class Text implements IText {
 
-        private IText iText;
-        private String overwriteText;
+        private final IText iText;
+        private final String overwriteText;
 
         public Text(IText itext, String overwriteText) {
             this.iText = itext;

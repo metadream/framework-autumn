@@ -102,11 +102,8 @@ public class Numbers {
         String leftSymbol = matcher.group("leftSymbol");
         String rightSymbol = matcher.group("rightSymbol");
         // Determine the opening and closing interval
-        if (("(".equals(leftSymbol) && value.compareTo(minValue) <= 0) || (")".equals(rightSymbol) && value.compareTo(maxValue) >= 0)
-            || ("[".equals(leftSymbol) && value.compareTo(minValue) < 0) || ("]".equals(rightSymbol) && value.compareTo(maxValue) > 0)) {
-            return false;
-        }
-        return true;
+        return (!"(".equals(leftSymbol) || value.compareTo(minValue) > 0) && (!")".equals(rightSymbol) || value.compareTo(maxValue) < 0)
+            && (!"[".equals(leftSymbol) || value.compareTo(minValue) >= 0) && (!"]".equals(rightSymbol) || value.compareTo(maxValue) <= 0);
     }
 
 }

@@ -21,6 +21,20 @@ import org.springframework.web.servlet.HandlerMapping;
  */
 public class HttpUtils {
 
+    /** Get origin */
+    public static String getOrigin(HttpServletRequest request) {
+        String scheme = request.getScheme();
+        String serverName = request.getServerName();
+        int serverPort = request.getServerPort();
+
+        StringBuilder origin = new StringBuilder();
+        origin.append(scheme).append("://").append(serverName);
+        if ((scheme.equals("http") && serverPort != 80) || (scheme.equals("https") && serverPort != 443)) {
+            origin.append(":").append(serverPort);
+        }
+        return origin.toString();
+    }
+
     /** Get wildcard parameter */
     public static String getWildcard(HttpServletRequest request) {
         String path = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);

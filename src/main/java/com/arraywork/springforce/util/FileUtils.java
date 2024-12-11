@@ -1,8 +1,12 @@
 package com.arraywork.springforce.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,6 +14,9 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.core.io.Resource;
 
 /**
  * Directory and File Utilities
@@ -86,6 +93,12 @@ public class FileUtils {
             return fileCode.matches("(FFD8FF|89504E|47494638|52494646).+"); // jpg|png|gif|webp
         }
         return false;
+    }
+
+    /** Read content from resource */
+    public static String readContent(Resource resource) throws IOException {
+        Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8);
+        return new BufferedReader(reader).lines().collect(Collectors.joining()).replaceAll("\\s+", "");
     }
 
 }

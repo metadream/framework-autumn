@@ -3,7 +3,10 @@ package com.arraywork.springforce.util;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -47,6 +50,31 @@ public class Strings {
             builder.append(hex);
         }
         return builder.toString();
+    }
+
+    /** Replace placeholders in the template string by map key */
+    public static String compile(String template, Map<String, Object> params) {
+        org.springframework.util.Assert.notNull(template, "The template to be compiled cannot be null");
+        return params == null ? template : params.keySet().stream().reduce(template, (acc, key) ->
+            acc.replaceAll("\\{" + key + "\\}", params.get(key).toString())
+        );
+    }
+
+    /** Replace placeholders in template strings by array index */
+    /** Similar to MessageFormat.format(), but does not convert the numeric value */
+    public static String compile(String template, Object... params) {
+        Assert.notNull(template, "The template to be compiled cannot be null");
+        StringBuilder result = new StringBuilder();
+        Pattern pattern = Pattern.compile("\\{(\\d+)\\}");
+        Matcher matcher = pattern.matcher(template);
+
+        while (matcher.find()) {
+            int i = Integer.parseInt(matcher.group(1));
+            String replacement = i >= 0 && i < params.length ? params[i].toString() : matcher.group(0);
+            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+        }
+        matcher.appendTail(result);
+        return result.toString();
     }
 
 }

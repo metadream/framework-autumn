@@ -34,7 +34,6 @@ public class SecurityController {
     @ResponseBody
     public Principal login(@RequestBody Map<String, String> map) {
         Principal principal = service.login(map.get("username"), map.get("password"));
-        principal.setPassword("***");
         return session.addPrincipal(principal);
     }
 

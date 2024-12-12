@@ -1,8 +1,10 @@
 package com.arraywork.springforce.util;
 
-import java.util.List;
+import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 
 /**
@@ -14,34 +16,32 @@ import jakarta.validation.Validation;
  */
 public class Validator {
 
-    // Manually trigger validation for multiple properties
-    public static <T> List<String> validate(T entity, String[] properties) {
-        for (String property : properties) {
-            List<String> errors = validate(entity, property);
-            if (errors != null) return errors;
-        }
-        return null;
-    }
+    private static jakarta.validation.Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    // Manually trigger validation for single property
-    public static <T> List<String> validate(T entity, String property) {
-        jakarta.validation.Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<T>> errors = validator.validateProperty(entity, property);
-        List<String> messages = Arrays.map(errors, e -> e.getMessage());
-        return messages.isEmpty() ? null : messages;
+    /** Manually trigger validation for entity or its fields */
+    public static <T> void validate(T entity, String... fields) {
+        Set<ConstraintViolation<T>> errors = new LinkedHashSet<>();
+        if (fields == null || fields.length == 0) {
+            errors.addAll(validator.validate(entity));
+        } else {
+            for (String field : fields) {
+                errors.addAll(validator.validateProperty(entity, field));
+            }
+        }
+        if (!errors.isEmpty()) {
+            String messages = errors.stream().map(e -> e.getMessage()).collect(Collectors.joining(","));
+            throw new ConstraintViolationException(messages, errors);
+        }
     }
 
     /**
      * Validation Group Interface for Entity Field
      * (with Spring's @Validated grouping verification)
      */
-    public interface Insert {
-    }
+    public interface Insert { }
 
-    public interface Update {
-    }
+    public interface Update { }
 
-    public interface Delete {
-    }
+    public interface Delete { }
 
 }

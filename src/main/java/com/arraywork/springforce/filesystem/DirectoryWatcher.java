@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Directory Watcher
+ * 大文件复制会触发大量重复修改事件
  *
  * @author AiChen
  * @copyright ArrayWork Inc.

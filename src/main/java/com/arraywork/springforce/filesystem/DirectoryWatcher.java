@@ -2,16 +2,12 @@ package com.arraywork.springforce.filesystem;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.time.Duration;
-import java.util.List;
-import java.util.Set;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.concurrent.atomic.AtomicBoolean;
+import jakarta.annotation.PreDestroy;
 
-import org.springframework.boot.devtools.filewatch.ChangedFile;
-import org.springframework.boot.devtools.filewatch.ChangedFiles;
-import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
-
-import com.arraywork.springforce.util.FileUtils;
+import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,71 +16,164 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author AiChen
  * @copyright ArrayWork Inc.
- * @since 2024/04/25
+ * @since 2024/12/13
  */
 @Slf4j
-public class DirectoryWatcher {
+@Component
+public class DirectoryWatcher implements Runnable {
 
-    private final Duration pollInterval;
-    private final Duration quietPeriod;
-    private final DirectoryListener listener;
-    private FileSystemWatcher watcher;
-    private Path observePath;
+    private final AtomicBoolean running = new AtomicBoolean(false);
+    private final ChangeListener listener;
 
-    /** Initialize the watcher parameters */
-    public DirectoryWatcher(long pollInterval, long quietPeriod, DirectoryListener listener) {
-        this.pollInterval = Duration.ofSeconds(pollInterval);
-        this.quietPeriod = Duration.ofSeconds(quietPeriod);
+    private Thread thread;
+    private WatchService watcher;
+    private Path directory;
+    private boolean recursive;
+
+    public DirectoryWatcher(ChangeListener listener) {
         this.listener = listener;
     }
 
-    /**
-     * Start watch the specified directory
-     * can be called repeatedly to change the directory
-     */
-    public void start(String rootDirectory) {
-        stop();
-        observePath = Path.of(rootDirectory);
-        watcher = new FileSystemWatcher(true, pollInterval, quietPeriod);
-        watcher.addSourceDirectory(observePath.toFile());
-        watcher.addListener(changeSet -> {
+    /** Start the watching thread */
+    public synchronized void start(Path directory, boolean recursive) throws IOException {
+        if (running.get()) {
+            stop();
+        }
+        this.directory = directory;
+        this.recursive = recursive;
+        watcher = FileSystems.getDefault().newWatchService();
+        register(directory, recursive);
 
-            for (ChangedFiles files : changeSet) {
-                Set<ChangedFile> changedFiles = files.getFiles();
-                int count = 0, total = changedFiles.size();
-
-                for (ChangedFile changedFile : changedFiles) {
-                    File file = changedFile.getFile();
-                    count++;
-
-                    switch (changedFile.getType()) {
-                        case ADD -> listener.onAdd(file, count, total);
-                        case MODIFY -> listener.onModify(file, count, total);
-                        case DELETE -> listener.onDelete(file, count, total);
-                    }
-                }
-            }
-        });
-
-        watcher.start();
-        log.info("Directory watcher is watching on {}", rootDirectory);
+        running.set(true);
+        thread = new Thread(this);
+        thread.start();
     }
 
-    /** Scan all files manually */
-    public void scan() throws IOException {
-        List<File> files = FileUtils.walk(observePath);
-        int count = 0, total = files.size();
-        for (File file : files) {
-            listener.onScan(file, ++count, total);
+    /** Stop the watching thread */
+    public synchronized void stop() throws IOException {
+        if (running.get()) {
+            running.set(false);
+            if (thread != null) {
+                thread.interrupt();
+            }
+            if (watcher != null) {
+                watcher.close();
+            }
         }
     }
 
-    /** Kill the listening process */
-    public void stop() {
-        if (watcher != null) {
-            watcher.stop();
-            watcher = null;
-            log.info("Directory watcher stopped.");
+    /** Process change events */
+    @Override
+    public void run() {
+        log.info("Started watching directory: {}", directory);
+        try {
+            while (running.get() && !Thread.currentThread().isInterrupted()) {
+                WatchKey key;
+                try {
+                    key = watcher.take();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                } catch (ClosedWatchServiceException e) {
+                    break;
+                }
+
+                for (WatchEvent<?> event : key.pollEvents()) {
+                    WatchEvent.Kind<?> kind = event.kind();
+                    Path name = (Path) event.context();
+                    Path child = ((Path) key.watchable()).resolve(name);
+                    File file = child.toFile();
+
+                    switch (kind.name()) {
+                        case "ENTRY_MODIFY" -> listener.onModify(file);
+                        case "ENTRY_DELETE" -> listener.onDelete(file);
+                        case "ENTRY_CREATE" -> {
+                            listener.onCreate(file);
+                            if (recursive && file.isDirectory()) {
+                                register(child, recursive);
+                            }
+                        }
+                    }
+                }
+                if (!key.reset()) {
+                    log.warn("WatchKey no longer valid, stopping watcher for directory: {}", directory);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            log.error("Error while watching directory: {}", directory, e);
+        } finally {
+            log.info("Stopped watching directory: {}", directory);
+        }
+    }
+
+    /** Watch specified directory or its subdirectories */
+    private void register(Path directory, boolean recursive) throws IOException {
+        if (!recursive) {
+            register(directory);
+            return;
+        }
+        Files.walkFileTree(directory, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                register(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    /** Watch specified directory */
+    private void register(Path directory) throws IOException {
+        directory.register(watcher,
+            StandardWatchEventKinds.ENTRY_CREATE,
+            StandardWatchEventKinds.ENTRY_MODIFY,
+            StandardWatchEventKinds.ENTRY_DELETE);
+    }
+
+    @PreDestroy
+    public void onDestroy() throws IOException {
+        log.info("Stopping DirectoryWatcher via @PreDestroy...");
+        stop();
+    }
+
+    /** Callback interface */
+    interface ChangeListener {
+        default void onCreate(File file) { }
+        default void onModify(File file) { }
+        default void onDelete(File file) { }
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Path root = Path.of("/home/xehu/Documents/test");
+        DirectoryWatcher watcher = new DirectoryWatcher(new MyListener());
+        watcher.start(root, true);
+
+        Thread.sleep(10000);
+        watcher.stop();
+        System.out.println("Watcher stopped.");
+
+        Thread.sleep(10000);
+        watcher.start(Path.of("/home/xehu/Documents/test2/aaa"), true);
+        System.out.println("Watcher started again.");
+    }
+
+    static class MyListener implements ChangeListener {
+        @Override
+        public void onCreate(File file) {
+            if (file.isDirectory()) System.out.println("Directory created: " + file);
+            else System.out.println("File created: " + file);
+        }
+
+        @Override
+        public void onModify(File file) {
+            if (file.isDirectory()) System.out.println("Directory modified: " + file);
+            else System.out.println("File modified: " + file);
+        }
+
+        @Override
+        public void onDelete(File file) {
+            if (file.isDirectory()) System.out.println("Directory deleted: " + file);
+            else System.out.println("File deleted: " + file);
         }
     }
 

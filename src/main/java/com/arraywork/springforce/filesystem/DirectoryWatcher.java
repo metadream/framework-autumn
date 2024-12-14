@@ -4,6 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import jakarta.annotation.PreDestroy;
 
@@ -13,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Directory Watcher
- * 大文件复制会触发大量重复修改事件
+ * 大文件复制到一半删除
  *
  * @author AiChen
  * @copyright ArrayWork Inc.
@@ -22,6 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class DirectoryWatcher implements Runnable {
+
+    private final Map<String, LinkedList<ScheduledFuture<?>>> taskMap = new ConcurrentHashMap<>();
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     private final AtomicBoolean running = new AtomicBoolean(false);
     private final ChangeListener listener;
@@ -82,29 +92,55 @@ public class DirectoryWatcher implements Runnable {
                 for (WatchEvent<?> event : key.pollEvents()) {
                     WatchEvent.Kind<?> kind = event.kind();
                     Path name = (Path) event.context();
-                    Path child = ((Path) key.watchable()).resolve(name);
-                    File file = child.toFile();
+                    Path changed = ((Path) key.watchable()).resolve(name);
+                    String eventName = kind.name();
 
-                    switch (kind.name()) {
-                        case "ENTRY_MODIFY" -> listener.onModify(file);
-                        case "ENTRY_DELETE" -> listener.onDelete(file);
-                        case "ENTRY_CREATE" -> {
-                            listener.onCreate(file);
-                            if (recursive && file.isDirectory()) {
-                                register(child, recursive);
-                            }
+                    // Cancel tasks with the same file and event
+                    String fileEventKey = eventName + ":" + changed;
+                    LinkedList<ScheduledFuture<?>> taskList = taskMap.get(fileEventKey);
+                    if (taskList != null) {
+                        for (ScheduledFuture<?> task : taskList) {
+                            task.cancel(false);
                         }
+                        taskList.clear();
+                        taskMap.remove(fileEventKey);
                     }
+
+                    // Delayed triggering of monitoring events
+                    ScheduledFuture<?> scheduledTask = scheduler.schedule(() -> {
+                        processEvent(eventName, changed);
+                    }, 1, TimeUnit.SECONDS);
+
+                    // Add tasks to list
+                    taskMap.computeIfAbsent(fileEventKey, k -> new LinkedList<>()).add(scheduledTask);
                 }
+
                 if (!key.reset()) {
                     log.warn("WatchKey no longer valid, stopping watcher for directory: {}", directory);
                     break;
                 }
             }
-        } catch (IOException e) {
-            log.error("Error while watching directory: {}", directory, e);
         } finally {
             log.info("Stopped watching directory: {}", directory);
+        }
+    }
+
+    /** Process changed path event */
+    private void processEvent(String eventName, Path changed) {
+        File file = changed.toFile();
+        switch (eventName) {
+            case "ENTRY_MODIFY" -> listener.onModify(file);
+            case "ENTRY_DELETE" -> listener.onDelete(file);
+            case "ENTRY_CREATE" -> {
+                listener.onCreate(file);
+                if (recursive && file.isDirectory()) {
+                    try {
+                        register(changed, recursive);
+                    } catch (IOException e) {
+                        log.error("Error while watching directory: {}", directory, e);
+                    }
+                }
+            }
         }
     }
 
@@ -149,13 +185,13 @@ public class DirectoryWatcher implements Runnable {
         DirectoryWatcher watcher = new DirectoryWatcher(new MyListener());
         watcher.start(root, true);
 
-        Thread.sleep(10000);
-        watcher.stop();
-        System.out.println("Watcher stopped.");
-
-        Thread.sleep(10000);
-        watcher.start(Path.of("/home/xehu/Documents/test2/aaa"), true);
-        System.out.println("Watcher started again.");
+        //        Thread.sleep(10000);
+        //        watcher.stop();
+        //        System.out.println("Watcher stopped.");
+        //
+        //        Thread.sleep(10000);
+        //        watcher.start(Path.of("/home/xehu/Documents/test2/aaa"), true);
+        //        System.out.println("Watcher started again.");
     }
 
     static class MyListener implements ChangeListener {

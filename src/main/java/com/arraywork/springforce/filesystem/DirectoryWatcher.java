@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Directory Watcher
- * 大文件复制到一半删除
  *
  * @author AiChen
  * @copyright ArrayWork Inc.
@@ -129,10 +128,17 @@ public class DirectoryWatcher implements Runnable {
     private void processEvent(String eventName, Path changed) {
         File file = changed.toFile();
         switch (eventName) {
-            case "ENTRY_MODIFY" -> listener.onModify(file);
             case "ENTRY_DELETE" -> listener.onDelete(file);
+            case "ENTRY_MODIFY" -> {
+                // If the file is deleted during copying,
+                // the modify event will not be triggered.
+                if (file.exists()) {
+                    listener.onModify(file);
+                }
+            }
             case "ENTRY_CREATE" -> {
                 listener.onCreate(file);
+                // Watching added subdirectory
                 if (recursive && file.isDirectory()) {
                     try {
                         register(changed, recursive);

@@ -14,8 +14,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import jakarta.annotation.PreDestroy;
 
-import org.springframework.stereotype.Component;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -26,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
  * @since 2024/12/13
  */
 @Slf4j
-@Component
 public class DirectoryWatcher implements Runnable {
 
     private final Map<String, LinkedList<ScheduledFuture<?>>> taskMap = new ConcurrentHashMap<>();

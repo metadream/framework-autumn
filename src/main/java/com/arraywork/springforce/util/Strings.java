@@ -53,7 +53,7 @@ public class Strings {
     }
 
     /** Replace placeholders in the template string by map key */
-    public static String compile(String template, Map<String, Object> params) {
+    public static <T> String compile(String template, Map<String, T> params) {
         org.springframework.util.Assert.notNull(template, "The template to be compiled cannot be null");
         return params == null ? template : params.keySet().stream().reduce(template, (acc, key) ->
             acc.replaceAll("\\{" + key + "\\}", params.get(key).toString())

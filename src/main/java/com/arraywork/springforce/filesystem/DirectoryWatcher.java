@@ -177,7 +177,7 @@ public class DirectoryWatcher implements Runnable {
     }
 
     /** Callback interface */
-    interface ChangeListener {
+    public interface ChangeListener {
         default void onCreate(File file) { }
         default void onModify(File file) { }
         default void onDelete(File file) { }

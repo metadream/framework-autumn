@@ -24,7 +24,7 @@ public class GenericEnumConverter<E extends GenericEnum<T>, T>
     /** E (enum object) -> T (database column value) */
     @Override
     public T convertToDatabaseColumn(E attribute) {
-        return (attribute != null) ? attribute.code() : null;
+        return (attribute != null) ? attribute.getCode() : null;
     }
 
     /** T (database column value) -> E (enum object) */

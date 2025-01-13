@@ -19,7 +19,7 @@ public interface GenericEnum<T> {
      * returning, overriding the original default implementation of deserialization
      * from literals back to enumerations
      */
-    T code();
+    T getCode();
 
     /** Deserialization method */
     static <E extends GenericEnum> E codeOf(Object object, Class<E> enumClass) {
@@ -33,7 +33,7 @@ public interface GenericEnum<T> {
         }
 
         for (E e : enumClass.getEnumConstants()) {
-            if (String.valueOf(e.code()).equals(code)) return e;
+            if (String.valueOf(e.getCode()).equals(code)) return e;
         }
         return null;
     }

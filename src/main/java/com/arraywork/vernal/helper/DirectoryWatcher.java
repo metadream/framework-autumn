@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
@@ -13,6 +14,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import jakarta.annotation.PreDestroy;
+
+import com.arraywork.vernal.util.FileUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,6 +70,11 @@ public class DirectoryWatcher implements Runnable {
                 watcher.close();
             }
         }
+    }
+
+    /** Scan the entire root directory */
+    public void scan() throws IOException {
+        listener.onScan(FileUtils.walk(directory));
     }
 
     /** Process change events */
@@ -178,7 +186,7 @@ public class DirectoryWatcher implements Runnable {
 
     /** Callback interface */
     public interface ChangeListener {
-        default void onScan(File[] files) { }
+        default void onScan(List<File> files) { }
         default void onCreate(File file) { }
         default void onModify(File file) { }
         default void onDelete(File file) { }

@@ -12,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerMapping;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * HTTP Utilities
  *
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.HandlerMapping;
  * @copyright ArrayWork Inc.
  * @since 2024/01/25
  */
+@Slf4j
 public class HttpUtils {
 
     /** Get origin */
@@ -123,7 +126,7 @@ public class HttpUtils {
             try {
                 ipAddress = InetAddress.getLocalHost().getHostAddress();
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                log.error(e.getMessage(), e);
             }
         }
         return ipAddress;

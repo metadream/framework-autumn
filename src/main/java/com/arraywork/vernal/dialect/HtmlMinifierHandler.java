@@ -21,10 +21,11 @@ public class HtmlMinifierHandler extends AbstractTemplateHandler {
     private static final Pattern TAB_OR_NEW_LINE = Pattern.compile("[\\t\\n]+\\s");
 
     /**
-     * 重写文本处理方法
-     * 局限：页面上所有以“//”开头的行将被忽略（以解决内联<script>不能使用行级注释问题）
+     * Override the text handling method
+     * Limitation: All lines starting with "//" on the page will be ignored
+     * (to resolve the issue that inline <script> cannot use line comments).
      *
-     * @param iText 模板渲染后的纯文本（包括内联JS代码）
+     * @param iText Pure text after template rendering (including inline JS code)
      */
     @Override
     public void handleText(IText iText) {
@@ -39,31 +40,24 @@ public class HtmlMinifierHandler extends AbstractTemplateHandler {
             buffer.append(line);
         }
 
-        IText text = new SourceText(iText, buffer.toString());
+        IText text = new HtmlCodeText(iText, buffer.toString());
         super.handleText(text);
     }
 
-    /**
-     * 判断是否为可忽略的文本（空格、缩进、换行等）
-     *
-     * @param iText
-     * @return
-     */
+    /** Determine if the text is ignorable (spaces, indentation, line breaks, etc.) */
     private boolean ignorable(IText iText) {
         return StringUtils.isEmptyOrWhitespace(iText.getText()) || TAB_OR_NEW_LINE.matcher(iText.getText()).matches();
     }
 
     /**
-     * 文本实体类接口实现
-     *
-     * @author Marco
+     * Text entity class interface implementation
      */
-    class SourceText implements IText {
+    class HtmlCodeText implements IText {
 
         private final IText iText;
         private final String overwriteText;
 
-        public SourceText(IText itext, String overwriteText) {
+        public HtmlCodeText(IText itext, String overwriteText) {
             this.iText = itext;
             this.overwriteText = overwriteText;
         }

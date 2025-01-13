@@ -1,5 +1,6 @@
 package com.arraywork.vernal.error;
 
+import jakarta.annotation.Resource;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,7 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.apache.catalina.connector.ClientAbortException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -34,7 +34,7 @@ public class ErrorHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
-    @Autowired
+    @Resource
     private HttpServletRequest request;
 
     // When dragging the progress bar of the output video stream, it is easy to

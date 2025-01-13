@@ -1,10 +1,10 @@
 package com.arraywork.vernal.security;
 
 import java.lang.reflect.Method;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -24,7 +24,7 @@ import com.arraywork.vernal.util.Assert;
 @Component
 public class SecurityInterceptor implements HandlerInterceptor, WebMvcConfigurer {
 
-    @Autowired
+    @Resource
     private SecuritySession session;
 
     @Override

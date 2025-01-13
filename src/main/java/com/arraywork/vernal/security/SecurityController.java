@@ -1,6 +1,7 @@
 package com.arraywork.vernal.security;
 
 import java.util.Map;
+import jakarta.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -18,18 +19,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 public class SecurityController {
 
-    @Autowired
+    @Resource
     private SecuritySession session;
     @Autowired(required = false)
     private SecurityService service;
 
-    // Login page
+    /** Login page */
     @GetMapping("/login")
     public String login(Model model) {
         return "login";
     }
 
-    // Login action
+    /** Login action */
     @PostMapping("/login")
     @ResponseBody
     public Principal login(@RequestBody Map<String, String> map) {
@@ -37,10 +38,10 @@ public class SecurityController {
         return session.setPrincipal(principal);
     }
 
-    // Logout action
+    /** Logout action */
     @GetMapping("/logout")
     public String logout() {
-        session.destory();
+        session.destroy();
         return "redirect:/";
     }
 

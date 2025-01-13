@@ -1,11 +1,10 @@
 package com.arraywork.vernal.helper;
 
 import java.util.Map;
+import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -13,34 +12,35 @@ import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Java Mail Sender
- * Depends on spring-boot-starter-mail
+ * (Depends on spring-boot-starter-mail)
  *
  * @author Marco
  * @copyright ArrayWork Inc.
  * @since 2024/02/09
  */
 @Component
+@Slf4j
 public class MailSender {
-
-    private static final Logger logger = LoggerFactory.getLogger(MailSender.class);
 
     @Autowired(required = false)
     private JavaMailSender mailSender;
-    @Autowired
+    @Resource
     private TemplateEngine templateEngine;
 
     /** Process template with built-in engine */
-    public boolean sendMail(String template, Map<String, Object> model) {
+    public boolean send(Map<String, Object> model, String template) {
         Context context = new Context();
         context.setVariables(model);
         model.put("content", templateEngine.process(template, context));
-        return sendMail(model);
+        return send(model);
     }
 
     /** Send mime mail with model: { from, to, subject, content } */
-    public boolean sendMail(Map<String, Object> model) {
+    public boolean send(Map<String, Object> model) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper;
         try {
@@ -52,7 +52,7 @@ public class MailSender {
             mailSender.send(mimeMessage);
             return true;
         } catch (MessagingException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
             return false;
         }
     }

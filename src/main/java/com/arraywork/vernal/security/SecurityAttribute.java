@@ -1,6 +1,7 @@
 package com.arraywork.vernal.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -14,10 +15,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class SecurityAttribute {
 
-    @Autowired
+    @Resource
     private SecuritySession session;
 
     // example: <div th:if="${principal}" th:text="${principal.username}"></div>
+
+    /**
+     * Global public attribute
+     * <pre>
+     *   <div th:if="${principal}" th:text="${principal.username}"></div>
+     * </pre>
+     */
     @ModelAttribute("principal")
     public Principal principal() {
         return session.getPrincipal();

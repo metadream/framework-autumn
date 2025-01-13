@@ -27,10 +27,12 @@ public class Digest {
         return md5(queryString);
     }
 
+    /** Hashing with md5 */
     public static String md5(String str) {
         return DigestUtils.md5DigestAsHex(str.getBytes(StandardCharsets.UTF_8));
     }
 
+    /** Hashing with sha256 */
     public static String sha256(String str) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(str.getBytes(StandardCharsets.UTF_8));

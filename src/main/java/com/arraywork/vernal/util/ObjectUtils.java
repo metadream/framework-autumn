@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.springframework.util.StringUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Object Utilities
  *
@@ -13,6 +15,7 @@ import org.springframework.util.StringUtils;
  * @copyright ArrayWork Inc.
  * @since 2024/02/09
  */
+@Slf4j
 public class ObjectUtils {
 
     /** Get field values by field name reflection (setter/getter entities only) */
@@ -42,7 +45,7 @@ public class ObjectUtils {
             }
             return instance;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }

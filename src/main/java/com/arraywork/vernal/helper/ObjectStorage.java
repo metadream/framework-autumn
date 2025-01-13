@@ -18,7 +18,7 @@ import io.minio.UploadObjectArgs;
 /**
  * Object Storage Client
  * Compatible with Amazon S3 (Includes Cloudflare R2)
- * Depends on io.minio
+ * (Depends on io.minio)
  *
  * <pre>
  *   minio.endpoint = https://xxx.xxxxx.xxx

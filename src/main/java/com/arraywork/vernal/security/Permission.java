@@ -7,7 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation: Permission
- * example @Permission({"ADMIN", "USER"})
+ * <pre>
+ *   @Permission({"ADMIN", "USER"})
+ * </pre>
  *
  * @author Marco
  * @copyright ArrayWork Inc.

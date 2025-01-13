@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @copyright ArrayWork Inc.
  * @since 2024/02/26
  */
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)  // 正序列化：将枚举序列化为完整的JSON对象形式
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)  // Serialize the enum into a complete JSON object
 public interface GenericEnum<T> {
 
     /**

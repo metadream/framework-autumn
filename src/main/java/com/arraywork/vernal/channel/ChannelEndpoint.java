@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Channel Endpoint
+ * Channel Endpoint of WebSocket
  *
  * @author Marco
  * @copyright ArrayWork Inc.

@@ -21,27 +21,27 @@ public class SecurityContext {
 
     private static final Map<String, HttpSession> sessions = new ConcurrentHashMap<>();
 
-    // Add session
+    /** Add session */
     public HttpSession addSession(HttpSession session) {
         return sessions.put(session.getId(), session);
     }
 
-    // Remove session
+    /** Remove session */
     public HttpSession removeSession(HttpSession session) {
         return sessions.remove(session.getId());
     }
 
-    // Get session by specified id
+    /** Get session by specified id */
     public HttpSession getSession(String id) {
         return sessions.get(id);
     }
 
-    // Get all sessions in the application
+    /** Get all sessions in the application */
     public List<HttpSession> getSessions() {
         return sessions.values().stream().toList();
     }
 
-    // Get all sessions by principal (in the case of multiple logins for one user)
+    /** Get all sessions by principal (in the case of multiple logins for one user) */
     public List<HttpSession> getSessions(Principal principal) {
         return sessions.values().stream().filter(session -> {
             Object object = session.getAttribute(session.getId());
@@ -49,7 +49,7 @@ public class SecurityContext {
         }).toList();
     }
 
-    // Get all principals online
+    /** Get all principals online */
     public List<Principal> getPrincipals() {
         List<Principal> principals = new ArrayList<>();
         for (HttpSession session : sessions.values()) {

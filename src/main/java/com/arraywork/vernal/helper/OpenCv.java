@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Open Computer Vision Utils
- * Depends on org.opencv
+ * (Depends on org.opencv)
  *
  * @author Marco
  * @copyright ArrayWork Inc.
@@ -29,15 +29,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OpenCv {
 
-    // 输出图像默认质量75%
+    // Default image output quality is 75%.
     private static final int DEFAULT_QUALITY = 75;
 
     /**
      * 根据路径加载OpenCv库（相对路径则从项目根目录查找）
+     * Load OpenCV library based on the path
+     * (for relative paths, it will look from the project root directory).
      * Windows -> /path/to/opencv_java4100.dll
      * Linux -> /path/to/libopencv_java4100.so
      *
-     * @param libPath OpenCv库路径
+     * @param libPath OpenCv library path
      */
     public static void loadLibrary(String libPath) {
         if (!Path.of(libPath).isAbsolute()) {
@@ -48,7 +50,7 @@ public class OpenCv {
     }
 
     /**
-     * 获取图片的宽高像素
+     * Get the width and height of the image in pixels.
      *
      * @param input
      * @return { width, height }
@@ -61,12 +63,12 @@ public class OpenCv {
     }
 
     /**
-     * 捕获视频并截取相同纵横比的缩略图
-     * Windows下不支持中文路径
+     * Capture video and take a thumbnail with the same aspect ratio.
+     * (Chinese paths are not supported on Windows.)
      *
-     * @param input    输入文件路径
-     * @param output   输出文件路径
-     * @param longSide 长边值
+     * @param input    Input file path
+     * @param output   Output file path
+     * @param longSide Long side value
      */
     public static void captureVideo(String input, String output, int longSide) {
         checkPath(input, output);
@@ -111,12 +113,12 @@ public class OpenCv {
     }
 
     /**
-     * 按相同纵横比缩放图片
+     * Resize the image to the same aspect ratio (reading file with OpenCv)
      *
-     * @param input    输入文件路径
-     * @param output   输出文件路径
-     * @param longSide 长边值
-     * @param quality  质量（0-100）
+     * @param input    Input file path
+     * @param output   Output file path
+     * @param longSide Long side value
+     * @param quality  Output image quality（0-100）
      */
     private static void resizeImageNative(String input, String output, int longSide, int quality) {
         checkPath(input, output);
@@ -140,13 +142,14 @@ public class OpenCv {
     }
 
     /**
-     * 缩放图片（输入或输出路径中含有Unicode字符，例如在Windows中不支持中文路径）
-     * 用Java读取文件的速度比原生opencv略慢
+     * Resize the image to the same aspect ratio (reading file with Java)
+     * if the input or output path contains Unicode characters, such as Chinese paths
+     * not being supported on Windows. It's slightly slower than using native OpenCV
      *
-     * @param input    输入文件路径
-     * @param output   输出文件路径
-     * @param longSide 长边值
-     * @param quality  输出质量
+     * @param input    Input file path
+     * @param output   Output file path
+     * @param longSide Long side value
+     * @param quality  Output image quality（0-100）
      */
     private static void resizeImageUnicode(String input, String output, int longSide, int quality) {
         checkPath(input, output);
@@ -172,7 +175,7 @@ public class OpenCv {
         }
     }
 
-    // 校验输入文件是否存在，自动创建输出目录
+    /** Verify if the input file exists and automatically create the output directory. */
     private static void checkPath(String input, String output) {
         File file = new File(input);
         Assert.isTrue(file.exists(), "Input file not found: " + file);
@@ -180,7 +183,7 @@ public class OpenCv {
         if (dir != null && !dir.exists()) dir.mkdirs();
     }
 
-    // 计算缩放后的尺寸
+    /** Calculate the dimensions after scaling. */
     private static Size calcSize(int width, int height, int longSide) {
         if (longSide > 0) {
             double ratio = (double) width / height;
@@ -196,7 +199,7 @@ public class OpenCv {
         return new Size(width, height);
     }
 
-    // 判断是否Windows操作系统
+    /** Determine if the operating system is Windows. */
     private static boolean isWindows() {
         String osName = System.getProperty("os.name").toLowerCase();
         return osName.contains("windows");

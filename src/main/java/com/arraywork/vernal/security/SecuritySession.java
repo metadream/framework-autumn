@@ -18,25 +18,25 @@ public class SecuritySession {
     @Resource
     private HttpSession session;
 
-    // Get session id
+    /** Get session id */
     public String getId() {
         return session.getId();
     }
 
-    // Get principal from current session
+    /** Get principal from current session */
     public Principal getPrincipal() {
         Object object = session.getAttribute(session.getId());
         return object instanceof Principal principal ? principal : null;
     }
 
-    // Set principal to current session
+    /** Set principal to current session */
     public Principal setPrincipal(Principal principal) {
         session.setAttribute(session.getId(), principal);
         return principal;
     }
 
-    // Destory current session and principal
-    public void destory() {
+    /** Destroy current session and principal */
+    public void destroy() {
         session.invalidate();
     }
 

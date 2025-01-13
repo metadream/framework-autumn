@@ -12,7 +12,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Web Socket Channel Message Entity
+ * Channel Message Entity for WebSocket
  *
  * @author Marco
  * @copyright ArrayWork Inc.
@@ -43,10 +43,10 @@ public class ChannelMessage {
     }
 
     /**
-     * Channel Message Encoder for Web Socket
+     * Inner Class for Encoding Channel Message
      */
     @Slf4j
-    public static class Encoder implements jakarta.websocket.Encoder.Text<Object> {
+    class Encoder implements jakarta.websocket.Encoder.Text<Object> {
         private static final ObjectMapper mapper = new ObjectMapper();
 
         @Override

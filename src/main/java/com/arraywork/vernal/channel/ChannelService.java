@@ -8,21 +8,19 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import jakarta.websocket.Session;
 
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Channel Service
+ * Channel Service of WebSocket
  *
  * @author Marco
  * @copyright ArrayWork Inc.
  * @since 2024/07/06
  */
 @Service
-@EnableAsync
 @Slf4j
 public class ChannelService {
 

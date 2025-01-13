@@ -2,6 +2,7 @@ package com.arraywork.vernal;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.system.ApplicationHome;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
@@ -15,6 +16,7 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
  */
 @SpringBootApplication(scanBasePackages = "com.arraywork.vernal")
 @EnableAsync
+@EnableCaching
 public class BaseApplication {
 
     private static final ApplicationHome APP_HOME = new ApplicationHome();

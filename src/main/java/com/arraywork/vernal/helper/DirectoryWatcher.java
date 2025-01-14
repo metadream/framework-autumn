@@ -74,7 +74,12 @@ public class DirectoryWatcher implements Runnable {
 
     /** Scan the entire root directory */
     public void scan() throws IOException {
-        listener.onScan(FileUtils.walk(directory));
+        listener.onScan(FileUtils.walk(directory), null);
+    }
+
+    /** Scan the entire root directory with options */
+    public void scan(Object options) throws IOException {
+        listener.onScan(FileUtils.walk(directory), options);
     }
 
     /** Process change events */
@@ -186,7 +191,7 @@ public class DirectoryWatcher implements Runnable {
 
     /** Callback interface */
     public interface ChangeListener {
-        default void onScan(List<File> files) { }
+        default void onScan(List<File> files, Object options) { }
         default void onCreate(File file) { }
         default void onModify(File file) { }
         default void onDelete(File file) { }

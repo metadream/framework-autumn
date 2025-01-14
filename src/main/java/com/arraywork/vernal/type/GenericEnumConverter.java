@@ -17,7 +17,7 @@ import org.springframework.core.convert.converter.Converter;
  */
 @Configuration
 public class GenericEnumConverter<E extends GenericEnum<T>, T>
-    implements AttributeConverter<E, T>, Converter<T, E> {
+    implements AttributeConverter<E, T>, Converter<Object, E> {
 
     //// Override AttributeConverter //////////////////////////////////////////
 
@@ -29,15 +29,18 @@ public class GenericEnumConverter<E extends GenericEnum<T>, T>
 
     /** T (database column value) -> E (enum object) */
     @Override
-    public E convertToEntityAttribute(T code) {
-        return convert(code);
+    public E convertToEntityAttribute(T source) {
+        return convert(source);
     }
 
     //// Override Converter ///////////////////////////////////////////////////
 
-    /** Deserialization method for the @RequestParam field */
+    /**
+     * Deserialization method for the @RequestParam field
+     * (The source parameter cannot be a generic type.)
+     */
     @Override
-    public E convert(T source) {
+    public E convert(Object source) {
         Class<E> clazz = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         return GenericEnum.codeOf(source, clazz);
     }

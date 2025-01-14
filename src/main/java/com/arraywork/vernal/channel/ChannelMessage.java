@@ -46,7 +46,7 @@ public class ChannelMessage {
      * Inner Class for Encoding Channel Message
      */
     @Slf4j
-    static class Encoder implements jakarta.websocket.Encoder.Text<Object> {
+    public static class Encoder implements jakarta.websocket.Encoder.Text<Object> {
         private static final ObjectMapper mapper = new ObjectMapper();
 
         @Override

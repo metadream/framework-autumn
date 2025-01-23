@@ -65,12 +65,12 @@ public class StringUtils extends org.springframework.util.StringUtils {
     public static String compile(String template, Object... params) {
         Assert.notNull(template, "The template to be compiled cannot be null");
         StringBuilder result = new StringBuilder();
-        Pattern pattern = Pattern.compile("\\{(\\d+)\\}");
+        Pattern pattern = Pattern.compile("\\{\s*\\}");
         Matcher matcher = pattern.matcher(template);
 
+        int i = 0;
         while (matcher.find()) {
-            int i = Integer.parseInt(matcher.group(1));
-            String replacement = i >= 0 && i < params.length ? params[i].toString() : matcher.group(0);
+            String replacement = i < params.length ? params[i++].toString() : matcher.group(0);
             matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
         }
         matcher.appendTail(result);

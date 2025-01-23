@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerMapping;
@@ -88,22 +87,35 @@ public class HttpUtils {
     }
 
     /** Determine address is internal or not */
-    public static boolean isInternalAddr(String addr) {
-        if (!Strings.isBlank(addr)) {
-            if ("127.0.0.1".equals(addr) || "localhost".equals(addr)) return true;
-            String[] addrs = addr.split("\\.");
-            if (addrs.length == 4) {
-                int s1 = Integer.parseInt(addrs[0]);
-                int s2 = Integer.parseInt(addrs[1]);
-                // Class A 10.0.0.0-10.255.255.255
-                if (s1 == 10) return true;
-                // Class B 172.16.0.0-172.31.255.255
-                if (s1 == 172 && (s2 >= 16 || s2 <= 31)) return true;
-                // Class C 192.168.0.0-192.168.255.255
-                return s1 == 192 && s2 == 168;
+    public static boolean isInternalIp(String ipAddress) {
+        try {
+            InetAddress inetAddress = InetAddress.getByName(ipAddress);
+            // Loopback address of IPv4 or IPv6
+            if (inetAddress.isLoopbackAddress()) return true;
+            // Private address of IPv4 or unique local address of IPv6
+            if (inetAddress.isSiteLocalAddress()) return true;
+            // Link-local address of IPv6
+            if (inetAddress.isLinkLocalAddress()) return true;
+
+            // Check private address of IPv4
+            if (inetAddress.getAddress().length == 4) {
+                byte[] addressBytes = inetAddress.getAddress();
+                // Convert to an unsigned integer
+                int firstByte = addressBytes[0] & 0xFF;
+                int secondByte = addressBytes[1] & 0xFF;
+                // 10.0.0.0/8
+                if (firstByte == 10) return true;
+                // 172.16.0.0/12
+                if (firstByte == 172 && (secondByte >= 16 && secondByte <= 31)) return true;
+                // 192.168.0.0/16
+                if (firstByte == 192 && secondByte == 168) return true;
+                // 169.254.0.0/16 (Link-local address of IPv6)
+                if (firstByte == 169 && secondByte == 254) return true;
             }
+            return false;
+        } catch (UnknownHostException e) {
+            return false;
         }
-        return false;
     }
 
     /** Get client request ip address */

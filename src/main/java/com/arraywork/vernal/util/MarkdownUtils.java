@@ -28,6 +28,7 @@ public class MarkdownUtils {
 
     /** Render string in markdown */
     public static String render(String markdown) {
+        markdown = markdown.replaceAll("\\", "\\\\");
         Node document = parser.parse(markdown);
         return renderer.render(document);
     }

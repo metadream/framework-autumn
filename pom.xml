@@ -14,9 +14,9 @@
     </properties>
 
     <groupId>com.arraywork</groupId>
-    <artifactId>summer</artifactId>
+    <artifactId>autumn</artifactId>
     <version>1.0.0</version>
-    <name>summer</name>
+    <name>autumn</name>
     <description>A general enhanced framework based on springboot</description>
 
     <dependencies>

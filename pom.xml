@@ -17,7 +17,7 @@
     <artifactId>summer</artifactId>
     <version>1.0.0</version>
     <name>summer</name>
-    <description>Generic enhanced framework based on springboot</description>
+    <description>A general enhanced framework based on springboot</description>
 
     <dependencies>
         <dependency>

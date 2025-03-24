@@ -21,7 +21,7 @@ public class AesCipher {
         SecretKeySpec secretKey = new SecretKeySpec(keyBytes, "AES");
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        byte[] cipherText = cipher.doFinal(input.getBytes());
+        byte[] cipherText = cipher.doFinal(reverse(input.getBytes()));
         return Base64.getUrlEncoder().encodeToString(cipherText);
     }
 
@@ -31,14 +31,39 @@ public class AesCipher {
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         byte[] plainText = cipher.doFinal(Base64.getUrlDecoder().decode(cipherText));
-        return new String(plainText);
+        return new String(reverse(plainText));
     }
 
+    /** 生成指定长度密钥 (AES-128必须是16个字节的密钥) */
     private static byte[] generateKey(String key, int length) throws NoSuchAlgorithmException {
         MessageDigest sha = MessageDigest.getInstance("SHA-256");
-        byte[] keyBytes = sha.digest(key.getBytes());
+        byte[] keyBytes = sha.digest(xor(key.getBytes()));
         byte[] bytes = new byte[length];
         System.arraycopy(keyBytes, 0, bytes, 0, length);
+        return bytes;
+    }
+
+    /** 反转混淆 */
+    private static byte[] reverse(byte[] bytes) {
+        int length = bytes.length;
+        for (int i = 0; i < length / 2; i++) {
+            int j = length - 1 - i;
+            byte temp = bytes[i];
+            bytes[i] = bytes[j];
+            bytes[j] = temp;
+        }
+        return bytes;
+    }
+
+    /** 异或运算 */
+    private static byte[] xor(byte[] bytes) {
+        int length = bytes.length;
+        for (int i = 0; i < length / 2; i++) {  // 首尾相互异或
+            int j = length - 1 - i;
+            byte temp = bytes[i];
+            bytes[i] = (byte) (bytes[i] ^ bytes[j]);
+            bytes[j] = (byte) (bytes[j] ^ temp);
+        }
         return bytes;
     }
 

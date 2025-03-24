@@ -197,20 +197,6 @@ public class DirectoryWatcher implements Runnable {
         default void onDelete(File file) { }
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException {
-        Path root = Path.of("/home/xehu/Documents/test");
-        DirectoryWatcher watcher = new DirectoryWatcher(new MyListener());
-        watcher.start(root, true);
-
-        //        Thread.sleep(10000);
-        //        watcher.stop();
-        //        System.out.println("Watcher stopped.");
-        //
-        //        Thread.sleep(10000);
-        //        watcher.start(Path.of("/home/xehu/Documents/test2/aaa"), true);
-        //        System.out.println("Watcher started again.");
-    }
-
     static class MyListener implements ChangeListener {
         @Override
         public void onCreate(File file) {
@@ -229,6 +215,20 @@ public class DirectoryWatcher implements Runnable {
             if (file.isDirectory()) System.out.println("Directory deleted: " + file);
             else System.out.println("File deleted: " + file);
         }
+    }
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Path root = Path.of("C:\\Users\\Administrator\\Pictures\\test");
+        DirectoryWatcher watcher = new DirectoryWatcher(new MyListener());
+        watcher.start(root, true);
+
+        //        Thread.sleep(10000);
+        //        watcher.stop();
+        //        System.out.println("Watcher stopped.");
+        //
+        //        Thread.sleep(10000);
+        //        watcher.start(Path.of("/home/xehu/Documents/test2/aaa"), true);
+        //        System.out.println("Watcher started again.");
     }
 
 }

@@ -7,7 +7,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 
 /**
- * Locale ChannelMessage Shortcuts
+ * Locale Message Shortcuts
  *
  * @author Marco
  * @copyright ArrayWork Inc.

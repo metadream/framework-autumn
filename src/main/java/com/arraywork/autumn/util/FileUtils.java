@@ -12,8 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.core.io.Resource;
@@ -55,16 +53,24 @@ public class FileUtils {
     }
 
     /** Walk directory */
-    public static List<File> walk(Path path) throws IOException {
-        List<File> files = new ArrayList<>();
+    public static void walkDirectory(Path path, FileCallback callback) throws IOException {
+        if (!Files.exists(path) || !Files.isDirectory(path)) {
+            throw new IllegalArgumentException("The provided path is not a valid directory: " + path);
+        }
+
         Files.walkFileTree(path, new SimpleFileVisitor<>() {
             @Override
-            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
-                if (attrs.isRegularFile()) files.add(path.toFile());
-                return super.visitFile(path, attrs);
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                callback.process(file.toFile());
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+                callback.process(dir.toFile());
+                return FileVisitResult.CONTINUE;
             }
         });
-        return files;
     }
 
     /** Determine input stream is image format or not */
@@ -84,6 +90,11 @@ public class FileUtils {
     public static String readContent(Resource resource) throws IOException {
         Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8);
         return new BufferedReader(reader).lines().collect(Collectors.joining()).replaceAll("\\s+", "");
+    }
+
+    /** Callback for handling each file or directory." */
+    public interface FileCallback {
+        void process(File file);
     }
 
 }

@@ -15,8 +15,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import jakarta.annotation.PreDestroy;
 
-import com.arraywork.autumn.util.FileUtils;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -71,16 +69,6 @@ public class DirectoryWatcher implements Runnable {
                 watcher.close();
             }
         }
-    }
-
-    /** Scan the entire root directory */
-    public void scan() throws IOException {
-        listener.onScan(FileUtils.walk(directory), null);
-    }
-
-    /** Scan the entire root directory with options */
-    public void scan(Object options) throws IOException {
-        listener.onScan(FileUtils.walk(directory), options);
     }
 
     /** Process change events */

@@ -1,7 +1,9 @@
 package com.arraywork.autumn.util;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.time.ZoneId;
 
 /**
@@ -59,6 +61,36 @@ public class TimeUtils {
         long s = seconds % 60;
         return ((d > 0 ? d + "d " : "") + (h > 0 ? h + "h " : "") + (m > 0 ? m + "m " : "")
             + (s > 0 ? s + "s" : "")).trim();
+    }
+
+    /** Format time difference */
+    public static String formatTimeDifference(LocalDateTime dateTime) {
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(now, dateTime);
+        long seconds = Math.abs(duration.getSeconds());
+        boolean isFuture = dateTime.isAfter(now);
+
+        if (seconds < 60) {
+            return isFuture ? seconds + "秒后" : "刚刚";
+        } else if (seconds < 3600) {
+            long minutes = seconds / 60;
+            return isFuture ? minutes + "分钟后" : minutes + "分钟前";
+        } else if (seconds < 86400) {
+            long hours = seconds / 3600;
+            return isFuture ? hours + "小时后" : hours + "小时前";
+        } else {
+            Period period = Period.between(now.toLocalDate(), dateTime.toLocalDate());
+            int years = Math.abs(period.getYears());
+            int months = Math.abs(period.getMonths());
+            int days = Math.abs(period.getDays());
+            if (years > 0) {
+                return isFuture ? years + "年后" : years + "年前";
+            } else if (months > 0) {
+                return isFuture ? months + "月后" : months + "月前";
+            } else {
+                return isFuture ? days + "天后" : days + "天前";
+            }
+        }
     }
 
 }

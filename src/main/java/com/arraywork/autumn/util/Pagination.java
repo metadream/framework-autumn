@@ -21,6 +21,7 @@ public class Pagination<T> {
     private long totalRecords;
     private int totalPages;
     private int pageNumber;
+    private int contentSize;
     private boolean hasPrevious;
     private boolean hasNext;
     private boolean hasContent;
@@ -34,6 +35,7 @@ public class Pagination<T> {
         setHasNext(page.hasNext());
         setHasContent(page.hasContent());
         setContent(page.getContent());
+        setContentSize(page.getContent().size());
     }
 
     /**

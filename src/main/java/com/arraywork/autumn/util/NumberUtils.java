@@ -116,12 +116,12 @@ public class NumberUtils {
      * @param size   Number of random result (positive integer and cannot exceed the given interval)
      */
     public static Set<Integer> nextInt(int origin, int bound, int size) {
-        org.springframework.util.Assert.isTrue(size > 0 && size <= bound - origin,
-            "The size of random numbers must be a positive integer and cannot exceed the given interval");
         Set<Integer> numbers = new HashSet<>();
-        while (numbers.size() < size) {
-            Integer next = random.nextInt(origin, bound);
-            numbers.add(next);
+        if (size > 0 && size <= bound - origin) {
+            while (numbers.size() < size) {
+                Integer next = ThreadLocalRandom.current().nextInt(origin, bound);
+                numbers.add(next);
+            }
         }
         return numbers;
     }

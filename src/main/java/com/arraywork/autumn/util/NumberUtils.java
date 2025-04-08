@@ -116,8 +116,9 @@ public class NumberUtils {
      * @param size   Number of random result (positive integer and cannot exceed the given interval)
      */
     public static Set<Integer> nextInt(int origin, int bound, int size) {
-        Set<Integer> numbers = new HashSet<>();
+        Set<Integer> numbers = null;
         if (size > 0 && size <= bound - origin) {
+            numbers = new HashSet<>();
             while (numbers.size() < size) {
                 Integer next = ThreadLocalRandom.current().nextInt(origin, bound);
                 numbers.add(next);

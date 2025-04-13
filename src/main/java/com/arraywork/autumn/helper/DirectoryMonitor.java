@@ -79,30 +79,45 @@ public class DirectoryMonitor {
     public static void main(String[] args) throws Exception {
         DirectoryMonitor dm = new DirectoryMonitor(1000, new DirectoryMonitor.DirectoryListener() {
             @Override
+            public void onDirectoryCreate(File dir) {
+                System.out.println("Directory " + dir.getAbsoluteFile() + " was created.");
+            }
+
+            @Override
+            public void onDirectoryChange(File dir) {
+                System.out.println("Directory " + dir.getAbsoluteFile() + " was modified.");
+            }
+
+            @Override
+            public void onDirectoryDelete(File dir) {
+                System.out.println("Directory " + dir.getAbsoluteFile() + " was deleted.");
+            }
+
+            @Override
             public void onFileCreate(File file) {
-                System.out.println(file.getAbsoluteFile() + " was created.");
+                System.out.println("File " + file.getAbsoluteFile() + " was created.");
             }
 
             @Override
             public void onFileChange(File file) {
-                System.out.println(file.getAbsoluteFile() + " was modified.");
+                System.out.println("File " + file.getAbsoluteFile() + " was modified.");
             }
 
             @Override
             public void onFileDelete(File file) {
-                System.out.println(file.getAbsoluteFile() + " was deleted.");
+                System.out.println("File " + file.getAbsoluteFile() + " was deleted.");
             }
         });
 
-        dm.start("C:\\Users\\Administrator\\Pictures\\test2");
+        dm.start("/home/xehu/Documents/test");
 
-        Thread.sleep(10000);
-        dm.stop();
-        System.out.println("Watcher stopped.");
-
-        Thread.sleep(10000);
-        dm.start("C:\\Users\\Administrator\\Pictures\\test");
-        System.out.println("Watcher started again.");
+        //        Thread.sleep(10000);
+        //        dm.stop();
+        //        System.out.println("Watcher stopped.");
+        //
+        //        Thread.sleep(10000);
+        //        dm.start("C:\\Users\\Administrator\\Pictures\\test");
+        //        System.out.println("Watcher started again.");
     }
 
 }

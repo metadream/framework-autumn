@@ -18,7 +18,7 @@ import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Directory Watcher
+ * Directory Watcher (something unexpected)
  *
  * @author Marco
  * @copyright ArrayWork Inc.
@@ -189,25 +189,25 @@ public class DirectoryWatcher implements Runnable {
     static class MyListener implements ChangeListener {
         @Override
         public void onCreate(File file) {
-            if (file.isDirectory()) System.out.println("Directory created: " + file);
-            else System.out.println("File created: " + file);
+            if (file.isFile()) System.out.println("File created: " + file);
+            else System.out.println("Directory created: " + file);
         }
 
         @Override
         public void onModify(File file) {
-            if (file.isDirectory()) System.out.println("Directory modified: " + file);
-            else System.out.println("File modified: " + file);
+            if (file.isFile()) System.out.println("File modified: " + file);
+            else System.out.println("Directory modified: " + file);
         }
 
         @Override
         public void onDelete(File file) {
-            if (file.isDirectory()) System.out.println("Directory deleted: " + file);
-            else System.out.println("File deleted: " + file);
+            if (file.isFile()) System.out.println("File deleted: " + file);
+            else System.out.println("Directory deleted: " + file);
         }
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Path root = Path.of("C:\\Users\\Administrator\\Pictures\\test");
+        Path root = Path.of("/home/xehu/Documents/test");
         DirectoryWatcher watcher = new DirectoryWatcher(new MyListener());
         watcher.start(root, true);
 

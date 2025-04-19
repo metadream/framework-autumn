@@ -3,6 +3,7 @@ package com.arraywork.autumn.type;
 import java.util.LinkedHashMap;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Generic Enumeration
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  * @since 2024/02/26
  */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)  // Serialize the enum into a complete JSON object
+@JsonDeserialize(using = GenericEnumDeserializer.class) // Deserialize from request body
 public interface GenericEnum<T> {
 
     /**

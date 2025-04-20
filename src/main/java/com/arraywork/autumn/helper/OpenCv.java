@@ -33,7 +33,6 @@ public class OpenCv {
     private static final int DEFAULT_QUALITY = 75;
 
     /**
-     * 根据路径加载OpenCv库（相对路径则从项目根目录查找）
      * Load OpenCV library based on the path
      * (for relative paths, it will look from the project root directory).
      * Windows -> /path/to/opencv_java4100.dll
@@ -47,6 +46,21 @@ public class OpenCv {
             libPath = Path.of(appHome, libPath).toString();
         }
         System.load(libPath);
+    }
+
+    /** Detect whether the input file is a real video. */
+    public static boolean isRealVideo(String input) {
+        boolean result = false;
+        VideoCapture capture = new VideoCapture(input);
+        if (capture.isOpened()) {
+            double frames = capture.get(Videoio.CAP_PROP_FRAME_COUNT);
+            double fps = capture.get(Videoio.CAP_PROP_FPS);
+            double width = capture.get(Videoio.CAP_PROP_FRAME_WIDTH);
+            double height = capture.get(Videoio.CAP_PROP_FRAME_HEIGHT);
+            result = frames > 1 && fps > 0 && width > 0 && height > 0;
+        }
+        capture.release();
+        return result;
     }
 
     /**
@@ -187,7 +201,6 @@ public class OpenCv {
     private static Size calcSize(int width, int height, int longSide) {
         if (longSide > 0) {
             double ratio = (double) width / height;
-
             if (width > height) {
                 width = longSide;
                 height = (int) (longSide / ratio);

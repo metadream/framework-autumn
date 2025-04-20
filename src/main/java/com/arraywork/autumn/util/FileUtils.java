@@ -12,7 +12,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import org.springframework.core.io.Resource;
@@ -59,18 +58,16 @@ public class FileUtils {
             throw new IllegalArgumentException("The provided path is not a valid directory: " + path);
         }
 
-        AtomicLong index = new AtomicLong(0);
-        long total = Files.walk(path).count();
         Files.walkFileTree(path, new SimpleFileVisitor<>() {
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-                callback.process(file.toFile(), index.incrementAndGet(), total);
+            public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
+                callback.process(path.toFile());
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
-            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-                callback.process(dir.toFile(), index.incrementAndGet(), total);
+            public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attrs) {
+                callback.process(path.toFile());
                 return FileVisitResult.CONTINUE;
             }
         });
@@ -98,7 +95,7 @@ public class FileUtils {
     /** Callback for handling each file or directory." */
     @FunctionalInterface
     public interface FileCallback {
-        void process(File file, long index, long total);
+        void process(File file);
     }
 
 }

@@ -1,16 +1,14 @@
 package com.arraywork.autumn.channel;
 
+import com.arraywork.autumn.util.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.micrometer.common.util.StringUtils;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * Channel Message Entity for WebSocket
@@ -44,23 +42,12 @@ public class ChannelMessage {
         return data;
     }
 
-    /**
-     * Inner Class for Encoding Channel Message
-     */
-    @Slf4j
+    /** Inner Class for Encoding Channel Message */
     public static class Encoder implements jakarta.websocket.Encoder.Text<Object> {
-        private static final ObjectMapper mapper = new ObjectMapper();
-
         @Override
         public String encode(Object message) {
-            try {
-                return mapper.writeValueAsString(message);
-            } catch (JsonProcessingException e) {
-                log.error(e.getMessage(), e);
-            }
-            return null;
+            return JsonUtils.stringify(message);
         }
-
     }
 
 }

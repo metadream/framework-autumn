@@ -27,9 +27,15 @@ public class ChannelService {
     private static final Map<String, Set<Session>> channels = new ConcurrentHashMap<>();
     private static final long TIMEOUT = 60_000; // 1 minute
 
-    /** Broadcast message to all sessions subscribed the channel */
+    /** Broadcast message to all sessions subscribed the channel with default event */
     public int broadcast(String channel, Object data) {
+        return broadcast(channel, null, data);
+    }
+
+    /** Broadcast message to all sessions subscribed the channel */
+    public int broadcast(String channel, String event, Object data) {
         ChannelMessage message = new ChannelMessage();
+        message.setEvent(event);
         message.setData(data);
 
         Assert.notNull(message.data(), "The field 'data' is required.");

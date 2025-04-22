@@ -12,7 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.core.io.Resource;
 
@@ -50,6 +52,17 @@ public class FileUtils {
         if (v < 1024) return v + " B";
         int z = (63 - Long.numberOfLeadingZeros(v)) / 10;
         return String.format("%.1f %siB", (double) v / (1L << (z * 10)), " KMGTPE".charAt(z));
+    }
+
+    /** Count regular files in path */
+    public static long countRegularFiles(Path path) {
+        AtomicLong count = new AtomicLong();
+        try (Stream<Path> paths = Files.walk(path).parallel()) {
+            count.set(paths.filter(Files::isRegularFile).count());
+        } catch (IOException e) {
+            throw new RuntimeException("Error counting files in directory: " + path, e);
+        }
+        return count.get();
     }
 
     /** Walk directory */

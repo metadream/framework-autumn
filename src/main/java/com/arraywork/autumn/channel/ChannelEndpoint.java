@@ -44,7 +44,7 @@ public class ChannelEndpoint {
     @OnMessage(maxMessageSize = 1024000) // 1MB
     public void onMessage(@PathParam("channel") String channel, Session session, String message) {
         log.info("Session <{}> sent a message: {}", session.getId(), message);
-        channelService.sendMessage(session, new ChannelMessage("You cannot send message to me."));
+        channelService.receiveMessage(channel, session, message);
     }
 
     @OnMessage

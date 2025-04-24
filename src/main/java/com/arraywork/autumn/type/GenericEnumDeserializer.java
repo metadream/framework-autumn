@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 /**
  * Generic Enumeration Deserializer
+ * It's used for deserializing enums in @RequestBody
  *
  * @author Marco
  * @copyright ArrayWork Inc.

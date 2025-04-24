@@ -4,10 +4,11 @@ import java.lang.reflect.ParameterizedType;
 import jakarta.persistence.AttributeConverter;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
 
 /**
  * Generic Enumeration Converter
+ * It is used for converting between entity attributes and database column values.
+ *
  * CustomEnum: public static class Converter extends GenericEnumConverter<CustomEnum, Integer> {}
  * Entity: @Convert(converter = CustomEnum.Converter.class)
  *
@@ -17,9 +18,7 @@ import org.springframework.core.convert.converter.Converter;
  */
 @Configuration
 public class GenericEnumConverter<E extends GenericEnum<T>, T>
-    implements AttributeConverter<E, T>, Converter<Object, E> {
-
-    //// Override AttributeConverter //////////////////////////////////////////
+    implements AttributeConverter<E, T> {
 
     /** E (enum object) -> T (database column value) */
     @Override
@@ -30,17 +29,6 @@ public class GenericEnumConverter<E extends GenericEnum<T>, T>
     /** T (database column value) -> E (enum object) */
     @Override
     public E convertToEntityAttribute(T source) {
-        return convert(source);
-    }
-
-    //// Override Converter ///////////////////////////////////////////////////
-
-    /**
-     * Deserialization method for the @RequestParam field
-     * (The source parameter cannot be a generic type.)
-     */
-    @Override
-    public E convert(Object source) {
         Class<E> clazz = (Class<E>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         return GenericEnum.codeOf(source, clazz);
     }

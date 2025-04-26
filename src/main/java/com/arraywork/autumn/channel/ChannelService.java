@@ -68,8 +68,6 @@ public class ChannelService {
     /** Broadcast message to all sessions subscribed the channel */
     public int broadcast(String channel, String event, Object data) {
         Assert.notNull(data, "The field 'data' is required.");
-        log.info("Broadcast to channel <{}>: {} - {}", channel, event, data);
-
         int result = 0;
         for (Session session : getChannel(channel)) {
             sendMessage(session, event, data);

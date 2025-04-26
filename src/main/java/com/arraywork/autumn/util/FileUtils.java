@@ -27,6 +27,18 @@ import org.springframework.core.io.Resource;
  */
 public class FileUtils {
 
+    /** Get the earliest file time */
+    public static long getEarliestFileTime(File file) {
+        try {
+            BasicFileAttributes attrs = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+            long creation = attrs.creationTime() != null ? attrs.creationTime().toMillis() : 0;
+            long modified = attrs.lastModifiedTime().toMillis();
+            return creation != 0 && creation < modified ? creation : modified;
+        } catch (IOException e) {
+            return file.lastModified();
+        }
+    }
+
     /** Get the file name without extension */
     public static String getName(String filename) {
         if (filename == null) return null;

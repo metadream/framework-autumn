@@ -27,6 +27,22 @@ public class StringUtils extends org.springframework.util.StringUtils {
         return s != null && s.matches("-?\\d+(\\.\\d+)?");
     }
 
+    /** Transform CamelCase notation to snake_case notation (getUserName -> get_user_name) */
+    public static String camelToSnake(String camelCase) {
+        return camelCase.replaceAll("(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", "_").toLowerCase();
+    }
+
+    /** Convert byte array to hexadecimal string */
+    public static String toHexadecimal(byte[] bytes) {
+        StringBuilder builder = new StringBuilder();
+        for (byte b : bytes) {
+            String hex = Integer.toHexString(b & 0xFF);
+            if (hex.length() < 2) builder.append(0);
+            builder.append(hex);
+        }
+        return builder.toString();
+    }
+
     /** Build query string from a map (ignores null and empty value) */
     public static String buildQueryString(Map<String, String> params) {
         StringBuilder sb = new StringBuilder();
@@ -39,17 +55,6 @@ public class StringUtils extends org.springframework.util.StringUtils {
                 URLEncoder.encode(value, StandardCharsets.UTF_8)));
         }
         return sb.toString();
-    }
-
-    /** Convert byte array to hexadecimal string */
-    public static String toHexadecimal(byte[] bytes) {
-        StringBuilder builder = new StringBuilder();
-        for (byte b : bytes) {
-            String hex = Integer.toHexString(b & 0xFF);
-            if (hex.length() < 2) builder.append(0);
-            builder.append(hex);
-        }
-        return builder.toString();
     }
 
     /** Replace placeholders in the template string by map key */

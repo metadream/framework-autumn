@@ -18,6 +18,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ObjectUtils {
 
+    /** Get property value from object instance */
+    public static Object getPropertyValue(Object object, String propertyPath) {
+        try {
+            return ObjectUtils.getPropertyValue(object, propertyPath);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     /** Get field values by field name reflection (setter/getter entities only) */
     public static Object invokeGetter(Object instance, String fieldName) throws Exception {
         Class<?> clazz = instance.getClass();

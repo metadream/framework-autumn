@@ -2,6 +2,7 @@ package com.arraywork.autumn.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashSet;
 import java.util.Random;
@@ -20,6 +21,42 @@ import java.util.regex.Pattern;
 public class NumberUtils {
 
     private static final Random random = ThreadLocalRandom.current();
+
+    /** 格式化金额（默认保留2位小数） */
+    public static String formatMoney(Number amount) {
+        return formatMoney(amount, 2);
+    }
+
+    /**
+     * 格式化金额（自定义小数位数）
+     * DecimalFormat 默认采用RoundingMode.HALF_EVEN，舍入规则为四舍六入五成双
+     * 即当多余位是5的时候，向最近的偶数舍入，此方法又称“银行家舍入法”，是金融领域的
+     * 主流方法甚至国际标准。但目前中国会计、税务仍强制要求使用经典四舍五入。
+     *
+     * @param amount        金额数值
+     * @param decimalPlaces 小数位数
+     * @return
+     */
+    public static String formatMoney(Number amount, int decimalPlaces) {
+        // 参数校验
+        if (amount == null) {
+            return "0.00";
+        }
+
+        // 确保小数位数在合理范围内
+        int decimals = Math.max(0, Math.min(decimalPlaces, 10));
+
+        // 使用DecimalFormat进行格式化
+        DecimalFormat df = (DecimalFormat) NumberFormat.getInstance();
+        df.setGroupingUsed(true);  // 启用千分位分隔
+        df.setRoundingMode(RoundingMode.HALF_UP);  // 使用经典四舍五入
+        df.setMinimumFractionDigits(decimals);
+        df.setMaximumFractionDigits(decimals);
+
+        // 处理BigDecimal类型以避免科学计数法
+        BigDecimal bd = new BigDecimal(amount.toString());
+        return df.format(bd);
+    }
 
     /** Rounding number without decimal */
     public static String formatDecimal(double number) {

@@ -59,26 +59,26 @@ public class NumberUtils {
     }
 
     /** Rounding number without decimal */
-    public static String formatDecimal(double number) {
+    public static String formatDecimal(Number number) {
         return formatDecimal(number, 0);
     }
 
     /** Rounding number with decimal digits */
-    public static String formatDecimal(double number, int digits) {
-        if (Double.isNaN(number)) number = 0;
-        BigDecimal decimal = BigDecimal.valueOf(number);
+    public static String formatDecimal(Number number, int digits) {
+        if (number == null) number = 0;
+        BigDecimal decimal = new BigDecimal(number.toString());
         decimal = decimal.setScale(digits, RoundingMode.HALF_UP);
         return decimal.stripTrailingZeros().toPlainString();
     }
 
     /** Format number to percentage without decimal */
-    public static String formatPercent(double number) {
+    public static String formatPercent(Number number) {
         return formatPercent(number, 0);
     }
 
     /** Format number to percentage with decimal */
-    public static String formatPercent(double number, int digits) {
-        if (Double.isNaN(number)) number = 0;
+    public static String formatPercent(Number number, int digits) {
+        if (number == null) number = 0;
         NumberFormat nf = NumberFormat.getPercentInstance();
         nf.setMaximumFractionDigits(digits);
         return nf.format(number);

@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +22,8 @@ public class ObjectUtils {
 
     /** Get property value from object instance */
     public static Object getPropertyValue(Object object, String propertyPath) {
-        try {
-            return ObjectUtils.getPropertyValue(object, propertyPath);
-        } catch (Exception e) {
-            return null;
-        }
+        BeanWrapper wrapper = new BeanWrapperImpl(object);
+        return wrapper.getPropertyValue(propertyPath);
     }
 
     /** Get field values by field name reflection (setter/getter entities only) */

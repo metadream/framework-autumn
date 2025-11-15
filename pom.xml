@@ -87,9 +87,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org</groupId>
-            <artifactId>opencv</artifactId>
-            <version>4.10.0</version>
+            <groupId>org.bytedeco</groupId>
+            <artifactId>opencv-platform</artifactId>
+            <version>4.11.0-1.5.12</version>
         </dependency>
 
         <dependency>
